@@ -15,6 +15,7 @@ import { scholarlyWorksRouter } from "./routes/scholarly-works";
 import { timelineRouter } from "./routes/timeline";
 import { interpretationsRouter } from "./routes/interpretations";
 import { adminRouter } from "./routes/admin";
+import { siteRouter } from "./routes/site";
 
 const app = new Hono();
 
@@ -55,6 +56,7 @@ app.route("/api/verses", versesRouter);
 app.route("/api/scholarly-works", scholarlyWorksRouter);
 app.route("/api/timeline", timelineRouter);
 app.route("/api/interpretations", interpretationsRouter);
+app.route("/api/site", siteRouter);
 
 // Admin CRUD routes (protected by requireAdmin middleware)
 app.route("/api/admin", adminRouter);

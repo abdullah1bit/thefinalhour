@@ -13,6 +13,8 @@ import {
   GraduationCap,
   Clock,
   Lightbulb,
+  Megaphone,
+  Settings2,
   LogOut,
   Menu,
 } from "lucide-react";
@@ -26,6 +28,8 @@ const sidebarLinks = [
   { to: "/admin/scholarly-works", label: "Scholarly Works", icon: GraduationCap, exact: false },
   { to: "/admin/timeline", label: "Timeline", icon: Clock, exact: false },
   { to: "/admin/interpretations", label: "Interpretations", icon: Lightbulb, exact: false },
+  { to: "/admin/banners", label: "Banners", icon: Megaphone, exact: false },
+  { to: "/admin/settings", label: "Settings", icon: Settings2, exact: false },
 ];
 
 function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {

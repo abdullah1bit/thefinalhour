@@ -155,3 +155,21 @@ model Interpretation {
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 }
+
+model AnnouncementBanner {
+  id        String   @id @default(cuid())
+  message   String
+  linkText  String?
+  linkUrl   String?
+  variant   String   @default("default") // "default" | "warning" | "success" | "donation"
+  enabled   Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}

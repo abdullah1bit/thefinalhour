@@ -1,5 +1,6 @@
 import { useHomepageContent } from "@/hooks/use-content";
 import HeroSection from "@/components/home/HeroSection";
+import AnnouncementBar from "@/components/home/AnnouncementBar";
 import DisclaimerBanner from "@/components/home/DisclaimerBanner";
 import HomepageProgressNav from "@/components/homepage/HomepageProgressNav";
 import FoundationSection from "@/components/homepage/FoundationSection";
@@ -17,6 +18,9 @@ const Index = () => {
   return (
     <div className="relative">
       <HomepageProgressNav />
+      {data?.banners && data.banners.length > 0 ? (
+        <AnnouncementBar banners={data.banners} />
+      ) : null}
       <HeroSection />
       <DisclaimerBanner />
 

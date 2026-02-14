@@ -22,6 +22,8 @@ import AdminVerses from "./pages/admin/AdminVerses";
 import AdminScholarlyWorks from "./pages/admin/AdminScholarlyWorks";
 import AdminTimeline from "./pages/admin/AdminTimeline";
 import AdminInterpretations from "./pages/admin/AdminInterpretations";
+import AdminBanners from "./pages/admin/AdminBanners";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +56,8 @@ const App = () => (
             <Route path="scholarly-works" element={<AdminScholarlyWorks />} />
             <Route path="timeline" element={<AdminTimeline />} />
             <Route path="interpretations" element={<AdminInterpretations />} />
+            <Route path="banners" element={<AdminBanners />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
 
           {/* Public routes - with main layout */}

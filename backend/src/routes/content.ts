@@ -5,7 +5,7 @@ const contentRouter = new Hono();
 
 // GET /api/content/homepage - returns all homepage data in one call
 contentRouter.get("/homepage", async (c) => {
-  const [fulfilledSigns, unfoldingSigns, majorSigns, interpretations, featuredVerse] =
+  const [fulfilledSigns, unfoldingSigns, majorSigns, interpretations, featuredVerse, banners, allSettings] =
     await Promise.all([
       prisma.sign.findMany({
         where: { status: "fulfilled" },
@@ -25,7 +25,15 @@ contentRouter.get("/homepage", async (c) => {
       prisma.quranicVerse.findFirst({
         orderBy: { sortOrder: "asc" },
       }),
+      prisma.announcementBanner.findMany({
+        where: { enabled: true },
+        orderBy: { sortOrder: "asc" },
+      }),
+      prisma.siteSetting.findMany(),
     ]);
+
+  const settings: Record<string, string> = {};
+  allSettings.forEach((s) => { settings[s.key] = s.value; });
 
   return c.json({
     data: {
@@ -34,6 +42,12 @@ contentRouter.get("/homepage", async (c) => {
       majorSigns: majorSigns.map(serializeMajorSign),
       interpretations: interpretations.map(serializeTimestamped),
       featuredVerse: featuredVerse ? serializeTimestamped(featuredVerse) : null,
+      banners: banners.map((b) => ({
+        ...b,
+        createdAt: b.createdAt.toISOString(),
+        updatedAt: b.updatedAt.toISOString(),
+      })),
+      settings,
     },
   });
 });

@@ -9,6 +9,7 @@ import type {
   ScholarlyWork,
   TimelineEvent,
   Interpretation,
+  AnnouncementBanner,
 } from "@/lib/types";
 
 export function useHomepageContent() {
@@ -66,5 +67,19 @@ export function useMajorSigns() {
   return useQuery({
     queryKey: ["major-signs"],
     queryFn: () => api.get<MajorSign[]>("/api/major-signs"),
+  });
+}
+
+export function useBanners() {
+  return useQuery({
+    queryKey: ["banners"],
+    queryFn: () => api.get<AnnouncementBanner[]>("/api/admin/banners"),
+  });
+}
+
+export function useSiteSettings() {
+  return useQuery({
+    queryKey: ["site-settings"],
+    queryFn: () => api.get<Record<string, string>>("/api/admin/settings"),
   });
 }

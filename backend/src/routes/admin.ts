@@ -16,6 +16,9 @@ import {
   UpdateTimelineEventSchema,
   CreateInterpretationSchema,
   UpdateInterpretationSchema,
+  CreateBannerSchema,
+  UpdateBannerSchema,
+  UpdateSiteSettingsSchema,
 } from "../types";
 
 const adminRouter = new Hono();
@@ -348,6 +351,84 @@ adminRouter.put("/interpretations/:id", async (c) => {
 adminRouter.delete("/interpretations/:id", async (c) => {
   await prisma.interpretation.delete({ where: { id: c.req.param("id") } });
   return c.body(null, 204);
+});
+
+// ─── Banner CRUD ────────────────────────────────────────────────
+
+adminRouter.get("/banners", async (c) => {
+  const banners = await prisma.announcementBanner.findMany({
+    orderBy: { sortOrder: "asc" },
+  });
+  return c.json({
+    data: banners.map((b) => ({
+      ...b,
+      createdAt: b.createdAt.toISOString(),
+      updatedAt: b.updatedAt.toISOString(),
+    })),
+  });
+});
+
+adminRouter.post("/banners", async (c) => {
+  const body = await c.req.json();
+  const parsed = CreateBannerSchema.parse(body);
+  const banner = await prisma.announcementBanner.create({ data: parsed });
+  return c.json({
+    data: {
+      ...banner,
+      createdAt: banner.createdAt.toISOString(),
+      updatedAt: banner.updatedAt.toISOString(),
+    },
+  }, 201);
+});
+
+adminRouter.put("/banners/:id", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json();
+  const parsed = UpdateBannerSchema.parse(body);
+  const banner = await prisma.announcementBanner.update({
+    where: { id },
+    data: parsed,
+  });
+  return c.json({
+    data: {
+      ...banner,
+      createdAt: banner.createdAt.toISOString(),
+      updatedAt: banner.updatedAt.toISOString(),
+    },
+  });
+});
+
+adminRouter.delete("/banners/:id", async (c) => {
+  await prisma.announcementBanner.delete({ where: { id: c.req.param("id") } });
+  return c.body(null, 204);
+});
+
+// ─── Site Settings CRUD ─────────────────────────────────────────
+
+adminRouter.get("/settings", async (c) => {
+  const settings = await prisma.siteSetting.findMany();
+  const obj: Record<string, string> = {};
+  settings.forEach((s) => { obj[s.key] = s.value; });
+  return c.json({ data: obj });
+});
+
+adminRouter.put("/settings", async (c) => {
+  const body = await c.req.json();
+  const parsed = UpdateSiteSettingsSchema.parse(body);
+
+  // Upsert each setting
+  for (const [key, value] of Object.entries(parsed)) {
+    await prisma.siteSetting.upsert({
+      where: { key },
+      update: { value },
+      create: { key, value },
+    });
+  }
+
+  const settings = await prisma.siteSetting.findMany();
+  const obj: Record<string, string> = {};
+  settings.forEach((s) => { obj[s.key] = s.value; });
+  return c.json({ data: obj });
 });
 
 export { adminRouter };

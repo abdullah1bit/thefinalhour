@@ -73,10 +73,24 @@ export interface Interpretation {
   sortOrder: number;
 }
 
+export type BannerVariant = "default" | "warning" | "success" | "donation";
+
+export interface AnnouncementBanner {
+  id: string;
+  message: string;
+  linkText: string | null;
+  linkUrl: string | null;
+  variant: BannerVariant;
+  enabled: boolean;
+  sortOrder: number;
+}
+
 export interface HomepageData {
   fulfilledSigns: Sign[];
   unfoldingSigns: Sign[];
   majorSigns: MajorSign[];
   interpretations: Interpretation[];
   featuredVerse: QuranicVerse | null;
+  banners: AnnouncementBanner[];
+  settings: Record<string, string>;
 }

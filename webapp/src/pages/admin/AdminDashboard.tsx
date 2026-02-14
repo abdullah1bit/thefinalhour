@@ -8,6 +8,8 @@ import {
   GraduationCap,
   Clock,
   Lightbulb,
+  Megaphone,
+  Settings2,
 } from "lucide-react";
 import {
   useSigns,
@@ -17,6 +19,7 @@ import {
   useScholarlyWorks,
   useTimelineEvents,
   useInterpretations,
+  useBanners,
 } from "@/hooks/use-content";
 
 interface StatCardProps {
@@ -60,6 +63,7 @@ export default function AdminDashboard() {
   const { data: timeline, isLoading: timelineLoading } = useTimelineEvents();
   const { data: interpretations, isLoading: interpLoading } =
     useInterpretations();
+  const { data: banners, isLoading: bannersLoading } = useBanners();
 
   return (
     <div>
@@ -116,6 +120,28 @@ export default function AdminDashboard() {
           icon={<Lightbulb className="h-5 w-5 text-muted-foreground" />}
           to="/admin/interpretations"
         />
+        <StatCard
+          title="Banners"
+          count={banners?.length}
+          loading={bannersLoading}
+          icon={<Megaphone className="h-5 w-5 text-muted-foreground" />}
+          to="/admin/banners"
+        />
+        <Link to="/admin/settings">
+          <Card className="border-border/50 bg-card/60 transition-all duration-200 hover:border-primary/30 hover:bg-card">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Site Settings
+              </CardTitle>
+              <Settings2 className="h-5 w-5 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Configure site title, tagline, and more
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );

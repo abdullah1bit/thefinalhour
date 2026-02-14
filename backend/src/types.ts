@@ -224,6 +224,48 @@ export type Interpretation = z.infer<typeof InterpretationSchema>;
 export type CreateInterpretation = z.infer<typeof CreateInterpretationSchema>;
 export type UpdateInterpretation = z.infer<typeof UpdateInterpretationSchema>;
 
+// ─── Announcement Banner ─────────────────────────────────────────
+
+export const BannerVariantSchema = z.enum(["default", "warning", "success", "donation"]);
+
+export const AnnouncementBannerSchema = z.object({
+  id: z.string(),
+  message: z.string(),
+  linkText: z.string().nullable(),
+  linkUrl: z.string().nullable(),
+  variant: BannerVariantSchema,
+  enabled: z.boolean(),
+  sortOrder: z.number(),
+});
+
+export const CreateBannerSchema = z.object({
+  message: z.string().min(1),
+  linkText: z.string().nullable().optional(),
+  linkUrl: z.string().nullable().optional(),
+  variant: BannerVariantSchema.optional(),
+  enabled: z.boolean().optional(),
+  sortOrder: z.number().optional(),
+});
+
+export const UpdateBannerSchema = CreateBannerSchema.partial();
+
+export type AnnouncementBanner = z.infer<typeof AnnouncementBannerSchema>;
+export type CreateBanner = z.infer<typeof CreateBannerSchema>;
+export type UpdateBanner = z.infer<typeof UpdateBannerSchema>;
+
+// ─── Site Settings ───────────────────────────────────────────────
+
+export const SiteSettingSchema = z.object({
+  id: z.string(),
+  key: z.string(),
+  value: z.string(),
+});
+
+export const UpdateSiteSettingsSchema = z.record(z.string(), z.string());
+
+export type SiteSetting = z.infer<typeof SiteSettingSchema>;
+export type UpdateSiteSettings = z.infer<typeof UpdateSiteSettingsSchema>;
+
 // ─── Homepage Response Schema ────────────────────────────────────
 
 export const HomepageDataSchema = z.object({
@@ -232,6 +274,8 @@ export const HomepageDataSchema = z.object({
   majorSigns: z.array(MajorSignSchema),
   interpretations: z.array(InterpretationSchema),
   featuredVerse: QuranicVerseSchema.nullable(),
+  banners: z.array(AnnouncementBannerSchema),
+  settings: z.record(z.string(), z.string()),
 });
 
 export type HomepageData = z.infer<typeof HomepageDataSchema>;
