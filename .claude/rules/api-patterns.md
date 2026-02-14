@@ -25,7 +25,7 @@ Shared conventions for API communication between backend and frontend.
 
 <auth_cors>
   Better Auth trustedOrigins (string wildcards):
-  ["http://localhost:*", "http://127.0.0.1:*", "https://*.dev.vibecode.run", "https://*.vibecode.run", "https://*.vibecodeapp.com"]
+  ["http://localhost:*", "http://127.0.0.1:*", "https://*.dev.vibecode.run", "https://*.vibecode.run", "https://*.vibecodeapp.com", "https://*.vibecode.dev", "https://vibecode.dev"]
 
   WRONG: RegExp objects or returning boolean - crashes origin trust.
   RIGHT: String array with * wildcards.

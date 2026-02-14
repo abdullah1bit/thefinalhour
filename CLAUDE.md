@@ -3,8 +3,14 @@
 This workspace contains a mobile app and backend server.
 
 <projects>
-  webapp/    — React app (port 8000, environment variable VITE_BASE_URL)
-  backend/   — Hono API server (port 3000, environment variable VITE_BACKEND_URL)
+  webapp/    — React app (port 8000)
+  backend/   — Hono API server (port 3000)
+
+  In production, the webapp uses relative URLs (/api/...) so it works on any domain.
+  VITE_BACKEND_URL is only needed in development for cross-origin requests to the backend on a different port.
+  Better Auth derives its base URL per-request from reverse proxy headers (X-Forwarded-Host/Proto) via trustedProxyHeaders: true. Do NOT set baseURL in the betterAuth() config.
+  The webapp auth client (createAuthClient) should use: baseURL: import.meta.env.VITE_BACKEND_URL || undefined
+  The webapp API helper should use: import.meta.env.VITE_BACKEND_URL || "" (empty string = relative URLs)
 </projects>
 
 <agents>
