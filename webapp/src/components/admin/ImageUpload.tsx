@@ -22,6 +22,12 @@ interface ImageUploadProps {
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
+const SIZE_HEIGHTS: Record<string, string> = {
+  sm: "120px",
+  md: "180px",
+  lg: "260px",
+};
+
 export default function ImageUpload({
   imageUrl,
   imageSettings,
@@ -32,7 +38,11 @@ export default function ImageUpload({
   const fileRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const settings = imageSettings || { objectFit: "cover" as const, objectPosition: "center", aspectRatio: "16/9" };
+  const settings = imageSettings || {
+    objectFit: "cover" as const,
+    objectPosition: "center",
+    size: "md" as const,
+  };
 
   const handleUpload = async (file: File) => {
     if (file.size > 5 * 1024 * 1024) {
@@ -55,7 +65,7 @@ export default function ImageUpload({
       const json = await response.json();
       onImageUrlChange(json.data.url);
       if (!imageSettings) {
-        onImageSettingsChange({ objectFit: "cover", objectPosition: "center", aspectRatio: "16/9" });
+        onImageSettingsChange({ objectFit: "cover", objectPosition: "center", size: "md" });
       }
       toast({ title: "Image uploaded" });
     } catch (error) {
@@ -80,6 +90,7 @@ export default function ImageUpload({
   };
 
   const fullUrl = imageUrl ? (imageUrl.startsWith("http") ? imageUrl : `${API_BASE}${imageUrl}`) : null;
+  const previewHeight = SIZE_HEIGHTS[settings.size || "md"] || SIZE_HEIGHTS.md;
 
   return (
     <div className="space-y-3">
@@ -119,8 +130,8 @@ export default function ImageUpload({
           {/* Preview */}
           <div className="relative group">
             <div
-              className="overflow-hidden rounded-md border border-border/50 bg-secondary/20"
-              style={{ aspectRatio: settings.aspectRatio || "16/9", maxHeight: "240px" }}
+              className="w-full overflow-hidden rounded-md border border-border/50 bg-secondary/20"
+              style={{ height: previewHeight }}
             >
               <img
                 src={fullUrl!}
@@ -179,19 +190,18 @@ export default function ImageUpload({
               </Select>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs text-muted-foreground">Ratio</Label>
+              <Label className="text-xs text-muted-foreground">Size</Label>
               <Select
-                value={settings.aspectRatio || "16/9"}
-                onValueChange={(v) => updateSetting("aspectRatio", v)}
+                value={settings.size || "md"}
+                onValueChange={(v) => updateSetting("size", v)}
               >
                 <SelectTrigger className="h-8 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="16/9">16:9</SelectItem>
-                  <SelectItem value="4/3">4:3</SelectItem>
-                  <SelectItem value="1/1">1:1</SelectItem>
-                  <SelectItem value="auto">Auto</SelectItem>
+                  <SelectItem value="sm">Small</SelectItem>
+                  <SelectItem value="md">Medium</SelectItem>
+                  <SelectItem value="lg">Large</SelectItem>
                 </SelectContent>
               </Select>
             </div>

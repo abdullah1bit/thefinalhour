@@ -87,10 +87,9 @@ export default function MajorSignCard({ sign }: MajorSignCardProps) {
               {/* Image */}
               {sign.imageUrl ? (
                 <div
-                  className="mb-4 overflow-hidden rounded-md"
+                  className="mb-4 w-full overflow-hidden rounded-md"
                   style={{
-                    aspectRatio: imgSettings?.aspectRatio || "16/9",
-                    maxHeight: "200px",
+                    height: imgSettings?.size === "sm" ? "120px" : imgSettings?.size === "lg" ? "260px" : "180px",
                   }}
                 >
                   <img

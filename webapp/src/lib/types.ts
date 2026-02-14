@@ -4,6 +4,7 @@ export interface ImageSettings {
   objectFit?: "cover" | "contain";
   objectPosition?: string;
   aspectRatio?: string;
+  size?: "sm" | "md" | "lg";
 }
 
 export interface Sign {

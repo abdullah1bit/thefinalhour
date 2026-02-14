@@ -61,10 +61,9 @@ export default function ExpandableSignCard({ sign }: { sign: Sign }) {
             <div className="border-t border-border/30 px-4 pb-4 pt-3">
               {sign.imageUrl ? (
                 <div
-                  className="mb-3 overflow-hidden rounded-md"
+                  className="mb-3 w-full overflow-hidden rounded-md"
                   style={{
-                    aspectRatio: imgSettings?.aspectRatio || "16/9",
-                    maxHeight: "200px",
+                    height: imgSettings?.size === "sm" ? "120px" : imgSettings?.size === "lg" ? "260px" : "180px",
                   }}
                 >
                   <img

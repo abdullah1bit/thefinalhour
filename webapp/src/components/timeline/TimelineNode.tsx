@@ -115,10 +115,9 @@ function TimelineCard({ event, index, alignment }: TimelineCardProps) {
       {/* Banner image */}
       {event.imageUrl ? (
         <div
-          className="overflow-hidden"
+          className="w-full overflow-hidden"
           style={{
-            aspectRatio: imgSettings?.aspectRatio || "16/9",
-            maxHeight: "160px",
+            height: imgSettings?.size === "sm" ? "100px" : imgSettings?.size === "lg" ? "200px" : "140px",
           }}
         >
           <img
