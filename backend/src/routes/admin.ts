@@ -1,5 +1,7 @@
 import { Hono } from "hono";
+import { z } from "zod";
 import { prisma } from "../lib/prisma";
+import { auth } from "../lib/auth";
 import { requireAdmin } from "../middleware/requireAdmin";
 import {
   CreateSignSchema,
@@ -429,6 +431,190 @@ adminRouter.put("/settings", async (c) => {
   const obj: Record<string, string> = {};
   settings.forEach((s) => { obj[s.key] = s.value; });
   return c.json({ data: obj });
+});
+
+// ─── Password Change ──────────────────────────────────────────
+adminRouter.put("/change-password", async (c) => {
+  const body = await c.req.json();
+  const schema = z.object({
+    currentPassword: z.string().min(1),
+    newPassword: z.string().min(8, "Password must be at least 8 characters"),
+  });
+  const parsed = schema.parse(body);
+
+  // Use Better Auth's changePassword API (identifies user via session headers)
+  const result = await auth.api.changePassword({
+    headers: c.req.raw.headers,
+    body: {
+      currentPassword: parsed.currentPassword,
+      newPassword: parsed.newPassword,
+    },
+  });
+
+  return c.json({ data: { success: true } });
+});
+
+// ─── Content Export ─────────────────────────────────────────────
+adminRouter.get("/export", async (c) => {
+  const [signs, majorSigns, glossary, verses, works, timeline, interpretations, banners, settings] =
+    await Promise.all([
+      prisma.sign.findMany({ orderBy: { sortOrder: "asc" } }),
+      prisma.majorSign.findMany({
+        include: { details: { orderBy: { sortOrder: "asc" } } },
+        orderBy: { number: "asc" },
+      }),
+      prisma.glossaryTerm.findMany({ orderBy: { sortOrder: "asc" } }),
+      prisma.quranicVerse.findMany({ orderBy: { sortOrder: "asc" } }),
+      prisma.scholarlyWork.findMany({ orderBy: { sortOrder: "asc" } }),
+      prisma.timelineEvent.findMany({ orderBy: { sortOrder: "asc" } }),
+      prisma.interpretation.findMany({ orderBy: { sortOrder: "asc" } }),
+      prisma.announcementBanner.findMany({ orderBy: { sortOrder: "asc" } }),
+      prisma.siteSetting.findMany(),
+    ]);
+
+  const settingsObj: Record<string, string> = {};
+  settings.forEach((s) => { settingsObj[s.key] = s.value; });
+
+  return c.json({
+    data: {
+      exportedAt: new Date().toISOString(),
+      signs,
+      majorSigns: majorSigns.map((ms) => ({
+        ...ms,
+        sources: JSON.parse(ms.sources) as string[],
+      })),
+      glossary,
+      verses,
+      scholarlyWorks: works,
+      timeline,
+      interpretations,
+      banners,
+      settings: settingsObj,
+    },
+  });
+});
+
+// ─── Content Import ─────────────────────────────────────────────
+adminRouter.post("/import", async (c) => {
+  const body = await c.req.json();
+
+  // Validate top-level structure
+  const importSchema = z.object({
+    signs: z.array(z.any()).optional(),
+    majorSigns: z.array(z.any()).optional(),
+    glossary: z.array(z.any()).optional(),
+    verses: z.array(z.any()).optional(),
+    scholarlyWorks: z.array(z.any()).optional(),
+    timeline: z.array(z.any()).optional(),
+    interpretations: z.array(z.any()).optional(),
+    banners: z.array(z.any()).optional(),
+    settings: z.record(z.string(), z.string()).optional(),
+  });
+
+  const parsed = importSchema.parse(body);
+  const results: Record<string, number> = {};
+
+  // Use a transaction for atomicity
+  await prisma.$transaction(async (tx) => {
+    if (parsed.signs?.length) {
+      await tx.sign.deleteMany();
+      for (const sign of parsed.signs) {
+        const { id, createdAt, updatedAt, ...data } = sign;
+        await tx.sign.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
+      }
+      results.signs = parsed.signs.length;
+    }
+
+    if (parsed.majorSigns?.length) {
+      await tx.majorSignDetail.deleteMany();
+      await tx.majorSign.deleteMany();
+      for (const ms of parsed.majorSigns) {
+        const { id, createdAt, updatedAt, details, ...data } = ms;
+        await tx.majorSign.create({
+          data: {
+            ...data,
+            sources: Array.isArray(data.sources) ? JSON.stringify(data.sources) : data.sources,
+            sortOrder: data.sortOrder ?? 0,
+            details: {
+              create: (details || []).map((d: any, i: number) => ({
+                label: d.label,
+                content: d.content,
+                sortOrder: d.sortOrder ?? i,
+              })),
+            },
+          },
+        });
+      }
+      results.majorSigns = parsed.majorSigns.length;
+    }
+
+    if (parsed.glossary?.length) {
+      await tx.glossaryTerm.deleteMany();
+      for (const term of parsed.glossary) {
+        const { id, createdAt, updatedAt, ...data } = term;
+        await tx.glossaryTerm.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
+      }
+      results.glossary = parsed.glossary.length;
+    }
+
+    if (parsed.verses?.length) {
+      await tx.quranicVerse.deleteMany();
+      for (const verse of parsed.verses) {
+        const { id, createdAt, updatedAt, ...data } = verse;
+        await tx.quranicVerse.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
+      }
+      results.verses = parsed.verses.length;
+    }
+
+    if (parsed.scholarlyWorks?.length) {
+      await tx.scholarlyWork.deleteMany();
+      for (const work of parsed.scholarlyWorks) {
+        const { id, createdAt, updatedAt, ...data } = work;
+        await tx.scholarlyWork.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
+      }
+      results.scholarlyWorks = parsed.scholarlyWorks.length;
+    }
+
+    if (parsed.timeline?.length) {
+      await tx.timelineEvent.deleteMany();
+      for (const event of parsed.timeline) {
+        const { id, createdAt, updatedAt, ...data } = event;
+        await tx.timelineEvent.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
+      }
+      results.timeline = parsed.timeline.length;
+    }
+
+    if (parsed.interpretations?.length) {
+      await tx.interpretation.deleteMany();
+      for (const interp of parsed.interpretations) {
+        const { id, createdAt, updatedAt, ...data } = interp;
+        await tx.interpretation.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
+      }
+      results.interpretations = parsed.interpretations.length;
+    }
+
+    if (parsed.banners?.length) {
+      await tx.announcementBanner.deleteMany();
+      for (const banner of parsed.banners) {
+        const { id, createdAt, updatedAt, ...data } = banner;
+        await tx.announcementBanner.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
+      }
+      results.banners = parsed.banners.length;
+    }
+
+    if (parsed.settings && Object.keys(parsed.settings).length > 0) {
+      for (const [key, value] of Object.entries(parsed.settings)) {
+        await tx.siteSetting.upsert({
+          where: { key },
+          update: { value },
+          create: { key, value },
+        });
+      }
+      results.settings = Object.keys(parsed.settings).length;
+    }
+  });
+
+  return c.json({ data: { imported: results } });
 });
 
 export { adminRouter };

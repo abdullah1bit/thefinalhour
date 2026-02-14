@@ -1,6 +1,18 @@
 import { motion } from "framer-motion";
 
-const FeaturedVerse = () => {
+interface FeaturedVerseProps {
+  verse?: {
+    text: string;
+    reference: string;
+  } | null;
+}
+
+const FeaturedVerse = ({ verse }: FeaturedVerseProps) => {
+  const text =
+    verse?.text ||
+    "Are they only waiting for the Hour to take them by surprise? Yet some of its signs have already come...";
+  const reference = verse?.reference || "Surah Muhammad, 47:18";
+
   return (
     <section className="px-6 py-16 md:py-24">
       <motion.div
@@ -31,8 +43,7 @@ const FeaturedVerse = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="font-heading text-xl font-light italic leading-relaxed tracking-wide text-foreground/90 md:text-2xl lg:text-3xl"
         >
-          Are they only waiting for the Hour to take them by surprise? Yet some
-          of its signs have already come...
+          {text}
         </motion.blockquote>
 
         {/* Decorative closing quote */}
@@ -65,7 +76,7 @@ const FeaturedVerse = () => {
           transition={{ duration: 0.5, delay: 0.8 }}
           className="mt-4 text-sm tracking-widest text-primary/60"
         >
-          &mdash; Surah Muhammad, 47:18
+          &mdash; {reference}
         </motion.p>
       </motion.div>
     </section>

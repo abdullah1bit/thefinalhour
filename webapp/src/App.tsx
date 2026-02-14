@@ -24,6 +24,8 @@ import AdminTimeline from "./pages/admin/AdminTimeline";
 import AdminInterpretations from "./pages/admin/AdminInterpretations";
 import AdminBanners from "./pages/admin/AdminBanners";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminChangePassword from "./pages/admin/AdminChangePassword";
+import AdminBackup from "./pages/admin/AdminBackup";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +60,8 @@ const App = () => (
             <Route path="interpretations" element={<AdminInterpretations />} />
             <Route path="banners" element={<AdminBanners />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="change-password" element={<AdminChangePassword />} />
+            <Route path="backup" element={<AdminBackup />} />
           </Route>
 
           {/* Public routes - with main layout */}

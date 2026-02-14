@@ -43,7 +43,7 @@ const Index = () => {
       ) : null}
 
       <SectionDivider />
-      <FeaturedVerse />
+      <FeaturedVerse verse={data?.featuredVerse} />
       <SectionDivider />
       <BottomCTA />
     </div>

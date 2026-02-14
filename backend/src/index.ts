@@ -3,6 +3,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import "./env";
 import { logger } from "hono/logger";
+import { ZodError } from "zod";
+import { Prisma } from "@prisma/client";
 
 // Route imports
 import { authRouter } from "./routes/auth";
@@ -16,8 +18,56 @@ import { timelineRouter } from "./routes/timeline";
 import { interpretationsRouter } from "./routes/interpretations";
 import { adminRouter } from "./routes/admin";
 import { siteRouter } from "./routes/site";
+import { searchRouter } from "./routes/search";
 
 const app = new Hono();
+
+// ─── Global Error Handler ───────────────────────────────────────
+app.onError((err, c) => {
+  console.error("Unhandled error:", err);
+
+  // Zod validation errors
+  if (err instanceof ZodError) {
+    return c.json(
+      {
+        error: {
+          message: "Validation error",
+          code: "VALIDATION_ERROR",
+          details: err.issues,
+        },
+      },
+      400
+    );
+  }
+
+  // Prisma "record not found" (P2025)
+  if (
+    err instanceof Prisma.PrismaClientKnownRequestError &&
+    err.code === "P2025"
+  ) {
+    return c.json(
+      { error: { message: "Not found", code: "NOT_FOUND" } },
+      404
+    );
+  }
+
+  // Prisma "unique constraint violation" (P2002)
+  if (
+    err instanceof Prisma.PrismaClientKnownRequestError &&
+    err.code === "P2002"
+  ) {
+    return c.json(
+      { error: { message: "Already exists", code: "CONFLICT" } },
+      409
+    );
+  }
+
+  // Everything else
+  return c.json(
+    { error: { message: "Internal server error", code: "INTERNAL_ERROR" } },
+    500
+  );
+});
 
 // CORS middleware - validates origin against allowlist
 const allowed = [
@@ -56,10 +106,16 @@ app.route("/api/verses", versesRouter);
 app.route("/api/scholarly-works", scholarlyWorksRouter);
 app.route("/api/timeline", timelineRouter);
 app.route("/api/interpretations", interpretationsRouter);
+app.route("/api/search", searchRouter);
 app.route("/api/site", siteRouter);
 
 // Admin CRUD routes (protected by requireAdmin middleware)
 app.route("/api/admin", adminRouter);
+
+// ─── 404 catch-all ──────────────────────────────────────────────
+app.notFound((c) =>
+  c.json({ error: { message: "Not found", code: "NOT_FOUND" } }, 404)
+);
 
 const port = Number(process.env.PORT) || 3000;
 

@@ -5,7 +5,7 @@ const contentRouter = new Hono();
 
 // GET /api/content/homepage - returns all homepage data in one call
 contentRouter.get("/homepage", async (c) => {
-  const [fulfilledSigns, unfoldingSigns, majorSigns, interpretations, featuredVerse, banners, allSettings] =
+  const [fulfilledSigns, unfoldingSigns, majorSigns, interpretations, banners, allSettings] =
     await Promise.all([
       prisma.sign.findMany({
         where: { status: "fulfilled" },
@@ -22,9 +22,6 @@ contentRouter.get("/homepage", async (c) => {
       prisma.interpretation.findMany({
         orderBy: { sortOrder: "asc" },
       }),
-      prisma.quranicVerse.findFirst({
-        orderBy: { sortOrder: "asc" },
-      }),
       prisma.announcementBanner.findMany({
         where: { enabled: true },
         orderBy: { sortOrder: "asc" },
@@ -34,6 +31,19 @@ contentRouter.get("/homepage", async (c) => {
 
   const settings: Record<string, string> = {};
   allSettings.forEach((s) => { settings[s.key] = s.value; });
+
+  // Dynamic featured verse - check settings for specific verse ID
+  let featuredVerse = null;
+  if (settings.featuredVerseId) {
+    featuredVerse = await prisma.quranicVerse.findUnique({
+      where: { id: settings.featuredVerseId },
+    });
+  }
+  if (!featuredVerse) {
+    featuredVerse = await prisma.quranicVerse.findFirst({
+      orderBy: { sortOrder: "asc" },
+    });
+  }
 
   return c.json({
     data: {

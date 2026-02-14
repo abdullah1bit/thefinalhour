@@ -15,6 +15,8 @@ import {
   Lightbulb,
   Megaphone,
   Settings2,
+  Lock,
+  HardDrive,
   LogOut,
   Menu,
 } from "lucide-react";
@@ -30,6 +32,8 @@ const sidebarLinks = [
   { to: "/admin/interpretations", label: "Interpretations", icon: Lightbulb, exact: false },
   { to: "/admin/banners", label: "Banners", icon: Megaphone, exact: false },
   { to: "/admin/settings", label: "Settings", icon: Settings2, exact: false },
+  { to: "/admin/change-password", label: "Change Password", icon: Lock, exact: false },
+  { to: "/admin/backup", label: "Backup", icon: HardDrive, exact: false },
 ];
 
 function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
