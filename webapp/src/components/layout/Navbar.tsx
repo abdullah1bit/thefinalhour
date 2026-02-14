@@ -5,12 +5,7 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/foundation", label: "Foundation" },
-  { to: "/fulfilled", label: "Fulfilled" },
-  { to: "/unfolding", label: "Unfolding" },
-  { to: "/major-signs", label: "Major Signs" },
   { to: "/timeline", label: "The Sequence" },
-  { to: "/interpretations", label: "Interpretations" },
   { to: "/glossary", label: "Glossary" },
 ];
 

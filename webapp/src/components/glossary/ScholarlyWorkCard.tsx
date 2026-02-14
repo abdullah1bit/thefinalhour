@@ -1,4 +1,4 @@
-import type { ScholarlyWork } from "@/data/types";
+import type { ScholarlyWork } from "@/lib/types";
 
 interface ScholarlyWorkCardProps {
   work: ScholarlyWork;

@@ -1,6 +1,6 @@
 # Vibecode Workspace
 
-This workspace contains a mobile app and backend server.
+This workspace contains an Islamic Eschatology educational website with a backend API and admin panel.
 
 <projects>
   webapp/    — React app (port 8000)

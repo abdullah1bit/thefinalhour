@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { MajorSign } from "@/data/types";
+import type { MajorSign } from "@/lib/types";
 
 interface MajorSignCardProps {
   sign: MajorSign;

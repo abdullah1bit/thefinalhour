@@ -1,5 +1,5 @@
 import { BookOpen, Lightbulb, AlertCircle } from "lucide-react";
-import type { Interpretation } from "@/data/types";
+import type { Interpretation } from "@/lib/types";
 
 interface InterpretationCardProps {
   interpretation: Interpretation;

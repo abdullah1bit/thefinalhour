@@ -8,6 +8,8 @@ const envSchema = z.object({
   // Server Configuration
   PORT: z.string().optional().default("3000"),
   NODE_ENV: z.string().optional(),
+  DATABASE_URL: z.string().optional().default("file:./dev.db"),
+  BETTER_AUTH_SECRET: z.string().min(1).default("super-secret-key-change-in-production"),
 });
 
 /**

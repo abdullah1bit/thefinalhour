@@ -1,4 +1,4 @@
-import type { QuranicVerse } from "@/data/types";
+import type { QuranicVerse } from "@/lib/types";
 
 interface VerseCardProps {
   verse: QuranicVerse;

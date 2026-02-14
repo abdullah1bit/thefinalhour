@@ -2,12 +2,7 @@ import { Link } from "react-router-dom";
 
 const navigationLinks = [
   { to: "/", label: "Home" },
-  { to: "/foundation", label: "What is Islamic Eschatology" },
-  { to: "/fulfilled", label: "Signs That Have Come True" },
-  { to: "/unfolding", label: "Signs Unfolding Now" },
-  { to: "/major-signs", label: "Major Signs Approaching" },
   { to: "/timeline", label: "The Sequence" },
-  { to: "/interpretations", label: "Modern Interpretations" },
   { to: "/glossary", label: "Glossary & References" },
 ];
 

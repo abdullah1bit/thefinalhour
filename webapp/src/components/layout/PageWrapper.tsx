@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import type { SignStatus } from "@/data/types";
+import type { SignStatus } from "@/lib/types";
 import StatusBadge from "@/components/layout/StatusBadge";
 
 interface PageWrapperProps {

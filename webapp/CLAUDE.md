@@ -10,11 +10,21 @@
 </stack>
 
 <structure>
-  src/pages/        — Page components (manually routed in App.tsx). Add new pages to this folder.
+  src/pages/        — Page components (manually routed in App.tsx). Public: Index, Timeline, Glossary. Admin: pages/admin/*.
   src/components/
+    homepage/       — Homepage storytelling section components (FoundationSection, FulfilledSection, etc.)
+    home/           — Hero section, disclaimer, featured verse
+    layout/         — Navbar, Footer, SectionDivider, PageWrapper
+    signs/          — MajorSignCard, SignCard
+    timeline/       — Timeline-specific components
+    glossary/       — Glossary-specific components
     ui/             — shadcn/ui components (pre-built). Use these first.
-  src/hooks/        — Custom React hooks. Add new hooks to this folder.
-  src/lib/          — Utilities: utils.ts (cn helper for className merge)
+  src/hooks/        — Custom React hooks (use-content.ts for API, use-active-section.ts for scroll tracking)
+  src/lib/          — Utilities: utils.ts, api.ts, auth-client.ts, types.ts
+
+  The homepage is a single-page storytelling experience with all content sections.
+  Content is fetched from the backend API (not hardcoded).
+  Admin panel at /admin with CRUD for all content types.
 
   Create small, focused components instead of monolithic files.
   Do not write long Index.tsx or page files.

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import type { TimelineEvent } from "@/data/types";
+import type { TimelineEvent } from "@/lib/types";
 import StatusBadge from "@/components/layout/StatusBadge";
 
 interface TimelineNodeProps {

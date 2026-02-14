@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Sign } from "@/data/types";
+import type { Sign } from "@/lib/types";
 
 interface SignCardProps {
   sign: Sign;

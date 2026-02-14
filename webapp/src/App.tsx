@@ -7,14 +7,21 @@ import { useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Index from "./pages/Index";
-import Foundation from "./pages/Foundation";
-import Fulfilled from "./pages/Fulfilled";
-import Unfolding from "./pages/Unfolding";
-import MajorSigns from "./pages/MajorSigns";
 import Timeline from "./pages/Timeline";
 import Glossary from "./pages/Glossary";
-import Interpretations from "./pages/Interpretations";
 import NotFound from "./pages/NotFound";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminSigns from "./pages/admin/AdminSigns";
+import AdminSignEdit from "./pages/admin/AdminSignEdit";
+import AdminMajorSigns from "./pages/admin/AdminMajorSigns";
+import AdminMajorSignEdit from "./pages/admin/AdminMajorSignEdit";
+import AdminGlossary from "./pages/admin/AdminGlossary";
+import AdminVerses from "./pages/admin/AdminVerses";
+import AdminScholarlyWorks from "./pages/admin/AdminScholarlyWorks";
+import AdminTimeline from "./pages/admin/AdminTimeline";
+import AdminInterpretations from "./pages/admin/AdminInterpretations";
 
 const queryClient = new QueryClient();
 
@@ -33,24 +40,73 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
-        <div className="flex min-h-screen flex-col">
-          <Navbar />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/foundation" element={<Foundation />} />
-              <Route path="/fulfilled" element={<Fulfilled />} />
-              <Route path="/unfolding" element={<Unfolding />} />
-              <Route path="/major-signs" element={<MajorSigns />} />
-              <Route path="/timeline" element={<Timeline />} />
-              <Route path="/glossary" element={<Glossary />} />
-              <Route path="/interpretations" element={<Interpretations />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <Routes>
+          {/* Admin routes - no main layout */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="signs" element={<AdminSigns />} />
+            <Route path="signs/:id" element={<AdminSignEdit />} />
+            <Route path="major-signs" element={<AdminMajorSigns />} />
+            <Route path="major-signs/:id" element={<AdminMajorSignEdit />} />
+            <Route path="glossary" element={<AdminGlossary />} />
+            <Route path="verses" element={<AdminVerses />} />
+            <Route path="scholarly-works" element={<AdminScholarlyWorks />} />
+            <Route path="timeline" element={<AdminTimeline />} />
+            <Route path="interpretations" element={<AdminInterpretations />} />
+          </Route>
+
+          {/* Public routes - with main layout */}
+          <Route
+            path="/"
+            element={
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">
+                  <Index />
+                </main>
+                <Footer />
+              </div>
+            }
+          />
+          <Route
+            path="/timeline"
+            element={
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">
+                  <Timeline />
+                </main>
+                <Footer />
+              </div>
+            }
+          />
+          <Route
+            path="/glossary"
+            element={
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">
+                  <Glossary />
+                </main>
+                <Footer />
+              </div>
+            }
+          />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route
+            path="*"
+            element={
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">
+                  <NotFound />
+                </main>
+                <Footer />
+              </div>
+            }
+          />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

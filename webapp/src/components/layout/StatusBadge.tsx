@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { SignStatus } from "@/data/types";
+import type { SignStatus } from "@/lib/types";
 
 interface StatusBadgeProps {
   status: SignStatus;

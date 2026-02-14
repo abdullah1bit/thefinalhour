@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { GlossaryTerm } from "@/data/types";
+import type { GlossaryTerm } from "@/lib/types";
 
 interface GlossaryTermCardProps {
   term: GlossaryTerm;
