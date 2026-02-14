@@ -10,6 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Plus, X } from "lucide-react";
+import SourceLinkFields from "@/components/admin/SourceLinkFields";
+import ImageUpload from "@/components/admin/ImageUpload";
+import type { ImageSettings } from "@/lib/types";
 
 interface DetailItem {
   label: string;
@@ -32,6 +35,10 @@ export default function AdminMajorSignEdit() {
   const [sourcesText, setSourcesText] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<number>(0);
   const [details, setDetails] = useState<DetailItem[]>([]);
+  const [sourceLabel, setSourceLabel] = useState<string>("");
+  const [sourceUrl, setSourceUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageSettings, setImageSettings] = useState<ImageSettings | null>(null);
 
   const { data: existingSign } = useQuery({
     queryKey: ["major-signs", id],
@@ -52,6 +59,10 @@ export default function AdminMajorSignEdit() {
       setDetails(
         existingSign.details.map((d) => ({ label: d.label, content: d.content }))
       );
+      setSourceLabel(existingSign.sourceLabel || "");
+      setSourceUrl(existingSign.sourceUrl || "");
+      setImageUrl(existingSign.imageUrl || null);
+      setImageSettings(existingSign.imageSettings ? JSON.parse(existingSign.imageSettings) : null);
     }
   }, [existingSign]);
 
@@ -88,6 +99,10 @@ export default function AdminMajorSignEdit() {
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean),
+      sourceLabel: sourceLabel || null,
+      sourceUrl: sourceUrl || null,
+      imageUrl,
+      imageSettings: imageSettings ? JSON.stringify(imageSettings) : null,
       sortOrder,
       details: details.filter((d) => d.label && d.content),
     });
@@ -203,7 +218,21 @@ export default function AdminMajorSignEdit() {
                 value={sortOrder}
                 onChange={(e) => setSortOrder(Number(e.target.value))}
               />
+              <p className="text-xs text-muted-foreground">Starts from 0 (0 = first)</p>
             </div>
+
+            <ImageUpload
+              imageUrl={imageUrl}
+              imageSettings={imageSettings}
+              onImageUrlChange={setImageUrl}
+              onImageSettingsChange={setImageSettings}
+            />
+            <SourceLinkFields
+              sourceLabel={sourceLabel}
+              sourceUrl={sourceUrl}
+              onSourceLabelChange={setSourceLabel}
+              onSourceUrlChange={setSourceUrl}
+            />
 
             {/* Details section */}
             <div className="space-y-3">

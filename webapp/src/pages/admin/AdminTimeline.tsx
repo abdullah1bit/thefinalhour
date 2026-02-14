@@ -43,6 +43,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import SourceLinkFields from "@/components/admin/SourceLinkFields";
+import ImageUpload from "@/components/admin/ImageUpload";
+import type { ImageSettings } from "@/lib/types";
 
 const statusBadge: Record<string, { bg: string; text: string }> = {
   fulfilled: { bg: "bg-fulfilled/10 border-fulfilled/30", text: "text-fulfilled" },
@@ -61,6 +64,10 @@ export default function AdminTimeline() {
   const [status, setStatus] = useState<SignStatus>("approaching");
   const [description, setDescription] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<number>(0);
+  const [sourceLabel, setSourceLabel] = useState<string>("");
+  const [sourceUrl, setSourceUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageSettings, setImageSettings] = useState<ImageSettings | null>(null);
 
   const resetForm = () => {
     setEditingId(null);
@@ -69,6 +76,10 @@ export default function AdminTimeline() {
     setStatus("approaching");
     setDescription("");
     setSortOrder(0);
+    setSourceLabel("");
+    setSourceUrl("");
+    setImageUrl(null);
+    setImageSettings(null);
   };
 
   const openCreate = () => {
@@ -83,6 +94,10 @@ export default function AdminTimeline() {
     setStatus(item.status);
     setDescription(item.description);
     setSortOrder(item.sortOrder);
+    setSourceLabel(item.sourceLabel || "");
+    setSourceUrl(item.sourceUrl || "");
+    setImageUrl(item.imageUrl || null);
+    setImageSettings(item.imageSettings ? JSON.parse(item.imageSettings) : null);
     setDialogOpen(true);
   };
 
@@ -124,6 +139,10 @@ export default function AdminTimeline() {
       slug: generatedSlug,
       status,
       description,
+      sourceLabel: sourceLabel || null,
+      sourceUrl: sourceUrl || null,
+      imageUrl,
+      imageSettings: imageSettings ? JSON.stringify(imageSettings) : null,
       sortOrder,
     });
   };
@@ -141,7 +160,7 @@ export default function AdminTimeline() {
               Add Event
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingId ? "Edit Event" : "Add New Event"}
@@ -192,6 +211,18 @@ export default function AdminTimeline() {
                   required
                 />
               </div>
+              <ImageUpload
+                imageUrl={imageUrl}
+                imageSettings={imageSettings}
+                onImageUrlChange={setImageUrl}
+                onImageSettingsChange={setImageSettings}
+              />
+              <SourceLinkFields
+                sourceLabel={sourceLabel}
+                sourceUrl={sourceUrl}
+                onSourceLabelChange={setSourceLabel}
+                onSourceUrlChange={setSourceUrl}
+              />
               <div className="space-y-2">
                 <Label htmlFor="sortOrder">Sort Order</Label>
                 <Input
@@ -200,6 +231,7 @@ export default function AdminTimeline() {
                   value={sortOrder}
                   onChange={(e) => setSortOrder(Number(e.target.value))}
                 />
+                <p className="text-xs text-muted-foreground">Starts from 0 (0 = first)</p>
               </div>
               <div className="flex gap-3">
                 <Button type="submit" disabled={saveMutation.isPending}>

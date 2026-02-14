@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, BookOpen } from "lucide-react";
+import { ChevronDown, BookOpen, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { MajorSign } from "@/lib/types";
+import type { MajorSign, ImageSettings } from "@/lib/types";
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
 interface MajorSignCardProps {
   sign: MajorSign;
@@ -10,6 +12,9 @@ interface MajorSignCardProps {
 
 export default function MajorSignCard({ sign }: MajorSignCardProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const imgSettings: ImageSettings | null = sign.imageSettings
+    ? JSON.parse(sign.imageSettings)
+    : null;
 
   return (
     <motion.div
@@ -79,6 +84,27 @@ export default function MajorSignCard({ sign }: MajorSignCardProps) {
             className="overflow-hidden"
           >
             <div className="border-t border-border/40 px-5 pb-5 pt-4 md:px-6 md:pb-6">
+              {/* Image */}
+              {sign.imageUrl ? (
+                <div
+                  className="mb-4 overflow-hidden rounded-md"
+                  style={{
+                    aspectRatio: imgSettings?.aspectRatio || "16/9",
+                    maxHeight: "200px",
+                  }}
+                >
+                  <img
+                    src={sign.imageUrl.startsWith("http") ? sign.imageUrl : `${API_BASE}${sign.imageUrl}`}
+                    alt={sign.title}
+                    className="h-full w-full"
+                    style={{
+                      objectFit: (imgSettings?.objectFit || "cover") as "cover" | "contain",
+                      objectPosition: imgSettings?.objectPosition || "center",
+                    }}
+                  />
+                </div>
+              ) : null}
+
               {/* Details grid */}
               <div className="space-y-4">
                 {sign.details.map((detail) => (
@@ -111,6 +137,17 @@ export default function MajorSignCard({ sign }: MajorSignCardProps) {
                     </span>
                   ))}
                 </div>
+                {sign.sourceUrl ? (
+                  <a
+                    href={sign.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1 text-xs text-primary/80 hover:text-primary transition-colors"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    {sign.sourceLabel || "Read more"}
+                  </a>
+                ) : null}
               </div>
             </div>
           </motion.div>

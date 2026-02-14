@@ -78,6 +78,10 @@ model Sign {
   status      String
   category    String?
   period      String?
+  sourceUrl     String?
+  sourceLabel   String?
+  imageUrl      String?
+  imageSettings String?
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -92,6 +96,10 @@ model MajorSign {
   subtitle    String
   description String
   sources     String           // JSON string array
+  sourceUrl     String?
+  sourceLabel   String?
+  imageUrl      String?
+  imageSettings String?
   sortOrder   Int              @default(0)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
@@ -116,6 +124,8 @@ model GlossaryTerm {
   term       String   @unique
   arabic     String?
   definition String
+  sourceUrl   String?
+  sourceLabel String?
   sortOrder  Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -126,6 +136,8 @@ model QuranicVerse {
   reference String   @unique
   text      String
   context   String?
+  sourceUrl   String?
+  sourceLabel String?
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,6 +148,8 @@ model ScholarlyWork {
   title     String
   author    String
   deathDate String
+  sourceUrl   String?
+  sourceLabel String?
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -147,6 +161,10 @@ model TimelineEvent {
   title       String
   status      String
   description String
+  sourceUrl     String?
+  sourceLabel   String?
+  imageUrl      String?
+  imageSettings String?
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -157,6 +175,8 @@ model Interpretation {
   prophecy               String
   modernInterpretation   String
   scholarlyCaution       String
+  sourceUrl              String?
+  sourceLabel            String?
   sortOrder              Int      @default(0)
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt

@@ -11,6 +11,10 @@ export const SignSchema = z.object({
   status: z.string(),
   category: z.string().nullable(),
   period: z.string().nullable(),
+  sourceUrl: z.string().nullable(),
+  sourceLabel: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  imageSettings: z.string().nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -24,6 +28,10 @@ export const CreateSignSchema = z.object({
   status: z.string().min(1),
   category: z.string().nullable().optional(),
   period: z.string().nullable().optional(),
+  sourceUrl: z.string().nullable().optional(),
+  sourceLabel: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
+  imageSettings: z.string().nullable().optional(),
   sortOrder: z.number().optional().default(0),
 });
 
@@ -63,6 +71,10 @@ export const MajorSignSchema = z.object({
   subtitle: z.string(),
   description: z.string(),
   sources: z.array(z.string()),
+  sourceUrl: z.string().nullable(),
+  sourceLabel: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  imageSettings: z.string().nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -77,6 +89,10 @@ export const CreateMajorSignSchema = z.object({
   subtitle: z.string().min(1),
   description: z.string().min(1),
   sources: z.array(z.string()),
+  sourceUrl: z.string().nullable().optional(),
+  sourceLabel: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
+  imageSettings: z.string().nullable().optional(),
   sortOrder: z.number().optional().default(0),
   details: z.array(CreateMajorSignDetailSchema).optional().default([]),
 });
@@ -89,6 +105,10 @@ export const UpdateMajorSignSchema = z.object({
   subtitle: z.string().min(1).optional(),
   description: z.string().min(1).optional(),
   sources: z.array(z.string()).optional(),
+  sourceUrl: z.string().nullable().optional(),
+  sourceLabel: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
+  imageSettings: z.string().nullable().optional(),
   sortOrder: z.number().optional(),
   details: z.array(CreateMajorSignDetailSchema).optional(),
 });
@@ -104,6 +124,8 @@ export const GlossaryTermSchema = z.object({
   term: z.string(),
   arabic: z.string().nullable(),
   definition: z.string(),
+  sourceUrl: z.string().nullable(),
+  sourceLabel: z.string().nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -113,6 +135,8 @@ export const CreateGlossaryTermSchema = z.object({
   term: z.string().min(1),
   arabic: z.string().nullable().optional(),
   definition: z.string().min(1),
+  sourceUrl: z.string().nullable().optional(),
+  sourceLabel: z.string().nullable().optional(),
   sortOrder: z.number().optional().default(0),
 });
 
@@ -129,6 +153,8 @@ export const QuranicVerseSchema = z.object({
   reference: z.string(),
   text: z.string(),
   context: z.string().nullable(),
+  sourceUrl: z.string().nullable(),
+  sourceLabel: z.string().nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -138,6 +164,8 @@ export const CreateQuranicVerseSchema = z.object({
   reference: z.string().min(1),
   text: z.string().min(1),
   context: z.string().nullable().optional(),
+  sourceUrl: z.string().nullable().optional(),
+  sourceLabel: z.string().nullable().optional(),
   sortOrder: z.number().optional().default(0),
 });
 
@@ -154,6 +182,8 @@ export const ScholarlyWorkSchema = z.object({
   title: z.string(),
   author: z.string(),
   deathDate: z.string(),
+  sourceUrl: z.string().nullable(),
+  sourceLabel: z.string().nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -163,6 +193,8 @@ export const CreateScholarlyWorkSchema = z.object({
   title: z.string().min(1),
   author: z.string().min(1),
   deathDate: z.string().min(1),
+  sourceUrl: z.string().nullable().optional(),
+  sourceLabel: z.string().nullable().optional(),
   sortOrder: z.number().optional().default(0),
 });
 
@@ -180,6 +212,10 @@ export const TimelineEventSchema = z.object({
   title: z.string(),
   status: z.string(),
   description: z.string(),
+  sourceUrl: z.string().nullable(),
+  sourceLabel: z.string().nullable(),
+  imageUrl: z.string().nullable(),
+  imageSettings: z.string().nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -190,6 +226,10 @@ export const CreateTimelineEventSchema = z.object({
   title: z.string().min(1),
   status: z.string().min(1),
   description: z.string().min(1),
+  sourceUrl: z.string().nullable().optional(),
+  sourceLabel: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
+  imageSettings: z.string().nullable().optional(),
   sortOrder: z.number().optional().default(0),
 });
 
@@ -206,6 +246,8 @@ export const InterpretationSchema = z.object({
   prophecy: z.string(),
   modernInterpretation: z.string(),
   scholarlyCaution: z.string(),
+  sourceUrl: z.string().nullable(),
+  sourceLabel: z.string().nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -215,6 +257,8 @@ export const CreateInterpretationSchema = z.object({
   prophecy: z.string().min(1),
   modernInterpretation: z.string().min(1),
   scholarlyCaution: z.string().min(1),
+  sourceUrl: z.string().nullable().optional(),
+  sourceLabel: z.string().nullable().optional(),
   sortOrder: z.number().optional().default(0),
 });
 

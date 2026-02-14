@@ -19,6 +19,8 @@ import { interpretationsRouter } from "./routes/interpretations";
 import { adminRouter } from "./routes/admin";
 import { siteRouter } from "./routes/site";
 import { searchRouter } from "./routes/search";
+import { uploadsRouter } from "./routes/uploads";
+import { serveStatic } from "hono/bun";
 
 const app = new Hono();
 
@@ -91,6 +93,9 @@ app.use(
 // Logging
 app.use("*", logger());
 
+// Serve uploaded files
+app.use("/uploads/*", serveStatic({ root: "./" }));
+
 // Health check endpoint
 app.get("/health", (c) => c.json({ status: "ok" }));
 
@@ -108,6 +113,9 @@ app.route("/api/timeline", timelineRouter);
 app.route("/api/interpretations", interpretationsRouter);
 app.route("/api/search", searchRouter);
 app.route("/api/site", siteRouter);
+
+// Upload routes (must be before general admin route)
+app.route("/api/admin/upload", uploadsRouter);
 
 // Admin CRUD routes (protected by requireAdmin middleware)
 app.route("/api/admin", adminRouter);

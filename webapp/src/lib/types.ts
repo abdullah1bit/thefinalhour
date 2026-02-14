@@ -1,5 +1,11 @@
 export type SignStatus = "fulfilled" | "unfolding" | "approaching";
 
+export interface ImageSettings {
+  objectFit?: "cover" | "contain";
+  objectPosition?: string;
+  aspectRatio?: string;
+}
+
 export interface Sign {
   id: string;
   slug: string;
@@ -9,6 +15,10 @@ export interface Sign {
   status: SignStatus;
   category: string | null;
   period: string | null;
+  sourceUrl: string | null;
+  sourceLabel: string | null;
+  imageUrl: string | null;
+  imageSettings: string | null;
   sortOrder: number;
 }
 
@@ -28,6 +38,10 @@ export interface MajorSign {
   subtitle: string;
   description: string;
   sources: string[];
+  sourceUrl: string | null;
+  sourceLabel: string | null;
+  imageUrl: string | null;
+  imageSettings: string | null;
   details: MajorSignDetail[];
   sortOrder: number;
 }
@@ -37,6 +51,8 @@ export interface GlossaryTerm {
   term: string;
   arabic: string | null;
   definition: string;
+  sourceUrl: string | null;
+  sourceLabel: string | null;
   sortOrder: number;
 }
 
@@ -45,6 +61,8 @@ export interface QuranicVerse {
   reference: string;
   text: string;
   context: string | null;
+  sourceUrl: string | null;
+  sourceLabel: string | null;
   sortOrder: number;
 }
 
@@ -53,6 +71,8 @@ export interface ScholarlyWork {
   title: string;
   author: string;
   deathDate: string;
+  sourceUrl: string | null;
+  sourceLabel: string | null;
   sortOrder: number;
 }
 
@@ -62,6 +82,10 @@ export interface TimelineEvent {
   title: string;
   status: SignStatus;
   description: string;
+  sourceUrl: string | null;
+  sourceLabel: string | null;
+  imageUrl: string | null;
+  imageSettings: string | null;
   sortOrder: number;
 }
 
@@ -70,6 +94,8 @@ export interface Interpretation {
   prophecy: string;
   modernInterpretation: string;
   scholarlyCaution: string;
+  sourceUrl: string | null;
+  sourceLabel: string | null;
   sortOrder: number;
 }
 

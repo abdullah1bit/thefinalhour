@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { TimelineEvent } from "@/lib/types";
+import type { TimelineEvent, ImageSettings } from "@/lib/types";
 import StatusBadge from "@/components/layout/StatusBadge";
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
 interface TimelineNodeProps {
   event: TimelineEvent;
@@ -93,6 +96,10 @@ interface TimelineCardProps {
 }
 
 function TimelineCard({ event, index, alignment }: TimelineCardProps) {
+  const imgSettings: ImageSettings | null = event.imageSettings
+    ? JSON.parse(event.imageSettings)
+    : null;
+
   return (
     <motion.div
       initial={{ opacity: 0, x: alignment === "left" ? -20 : 20 }}
@@ -100,36 +107,71 @@ function TimelineCard({ event, index, alignment }: TimelineCardProps) {
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: 0.3 }}
       className={cn(
-        "group relative w-full max-w-sm rounded-lg border border-border/60 bg-card/80 p-4 backdrop-blur-sm",
+        "group relative w-full max-w-sm rounded-lg border border-border/60 bg-card/80 overflow-hidden backdrop-blur-sm",
         "transition-all duration-300 hover:border-primary/30 hover:bg-card",
         alignment === "right" ? "md:text-right" : "md:text-left"
       )}
     >
-      {/* Subtle connector line to dot (desktop only) */}
-      <div
-        className={cn(
-          "absolute top-[18px] hidden h-px w-6 bg-border/40 md:block",
-          alignment === "left" ? "-left-6" : "-right-6"
-        )}
-      />
+      {/* Banner image */}
+      {event.imageUrl ? (
+        <div
+          className="overflow-hidden"
+          style={{
+            aspectRatio: imgSettings?.aspectRatio || "16/9",
+            maxHeight: "160px",
+          }}
+        >
+          <img
+            src={event.imageUrl.startsWith("http") ? event.imageUrl : `${API_BASE}${event.imageUrl}`}
+            alt={event.title}
+            className="h-full w-full"
+            style={{
+              objectFit: (imgSettings?.objectFit || "cover") as "cover" | "contain",
+              objectPosition: imgSettings?.objectPosition || "center",
+            }}
+          />
+        </div>
+      ) : null}
 
-      <div className={cn(
-        "flex items-center gap-2 mb-2",
-        alignment === "right" ? "md:flex-row-reverse" : ""
-      )}>
-        <span className="font-body text-xs text-muted-foreground tabular-nums">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-        <StatusBadge status={event.status} />
+      <div className="p-4">
+        {/* Subtle connector line to dot (desktop only) */}
+        <div
+          className={cn(
+            "absolute top-[18px] hidden h-px w-6 bg-border/40 md:block",
+            alignment === "left" ? "-left-6" : "-right-6"
+          )}
+        />
+
+        <div className={cn(
+          "flex items-center gap-2 mb-2",
+          alignment === "right" ? "md:flex-row-reverse" : ""
+        )}>
+          <span className="font-body text-xs text-muted-foreground tabular-nums">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <StatusBadge status={event.status} />
+        </div>
+
+        <h3 className="font-heading text-lg font-semibold text-foreground leading-tight">
+          {event.title}
+        </h3>
+
+        <p className="mt-1.5 font-body text-sm leading-relaxed text-muted-foreground">
+          {event.description}
+        </p>
+
+        {event.sourceUrl ? (
+          <a
+            href={event.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1 text-xs text-primary/80 hover:text-primary transition-colors"
+          >
+            <ExternalLink className="h-3 w-3" />
+            {event.sourceLabel || "Read more"}
+          </a>
+        ) : null}
       </div>
-
-      <h3 className="font-heading text-lg font-semibold text-foreground leading-tight">
-        {event.title}
-      </h3>
-
-      <p className="mt-1.5 font-body text-sm leading-relaxed text-muted-foreground">
-        {event.description}
-      </p>
 
       {/* Decorative accent line */}
       <div

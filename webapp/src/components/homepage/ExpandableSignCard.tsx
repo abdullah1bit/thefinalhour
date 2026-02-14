@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Sign } from "@/lib/types";
+import type { Sign, ImageSettings } from "@/lib/types";
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
 const statusColors: Record<string, { dot: string; border: string; bg: string }> = {
   fulfilled: {
@@ -25,6 +27,9 @@ const statusColors: Record<string, { dot: string; border: string; bg: string }> 
 export default function ExpandableSignCard({ sign }: { sign: Sign }) {
   const [open, setOpen] = useState(false);
   const colors = statusColors[sign.status] || statusColors.fulfilled;
+  const imgSettings: ImageSettings | null = sign.imageSettings
+    ? JSON.parse(sign.imageSettings)
+    : null;
 
   return (
     <div className={cn("rounded-lg border bg-card/60 transition-colors", colors.border)}>
@@ -54,9 +59,39 @@ export default function ExpandableSignCard({ sign }: { sign: Sign }) {
             className="overflow-hidden"
           >
             <div className="border-t border-border/30 px-4 pb-4 pt-3">
+              {sign.imageUrl ? (
+                <div
+                  className="mb-3 overflow-hidden rounded-md"
+                  style={{
+                    aspectRatio: imgSettings?.aspectRatio || "16/9",
+                    maxHeight: "200px",
+                  }}
+                >
+                  <img
+                    src={sign.imageUrl.startsWith("http") ? sign.imageUrl : `${API_BASE}${sign.imageUrl}`}
+                    alt={sign.title}
+                    className="h-full w-full"
+                    style={{
+                      objectFit: (imgSettings?.objectFit || "cover") as "cover" | "contain",
+                      objectPosition: imgSettings?.objectPosition || "center",
+                    }}
+                  />
+                </div>
+              ) : null}
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {sign.description}
               </p>
+              {sign.sourceUrl ? (
+                <a
+                  href={sign.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1 text-xs text-primary/80 hover:text-primary transition-colors"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                  {sign.sourceLabel || "Read more"}
+                </a>
+              ) : null}
             </div>
           </motion.div>
         ) : null}

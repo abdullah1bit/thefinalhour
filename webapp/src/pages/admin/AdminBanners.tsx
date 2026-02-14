@@ -229,6 +229,7 @@ export default function AdminBanners() {
                     value={sortOrder}
                     onChange={(e) => setSortOrder(Number(e.target.value))}
                   />
+                  <p className="text-xs text-muted-foreground">Starts from 0 (0 = first)</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">

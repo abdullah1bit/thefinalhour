@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lightbulb, ChevronDown, AlertCircle } from "lucide-react";
+import { Lightbulb, ChevronDown, AlertCircle, ExternalLink } from "lucide-react";
 import type { Interpretation } from "@/lib/types";
 
 interface Props {
@@ -79,6 +79,17 @@ export default function InterpretationsSection({ interpretations }: Props) {
                   <p className="text-xs text-approaching/70 italic">
                     {interp.scholarlyCaution}
                   </p>
+                  {interp.sourceUrl ? (
+                    <a
+                      href={interp.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex items-center gap-1 text-xs text-primary/80 hover:text-primary transition-colors"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      {interp.sourceLabel || "Read more"}
+                    </a>
+                  ) : null}
                 </div>
               ))}
             </div>

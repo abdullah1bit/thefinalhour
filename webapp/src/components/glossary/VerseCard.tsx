@@ -1,3 +1,4 @@
+import { ExternalLink } from "lucide-react";
 import type { QuranicVerse } from "@/lib/types";
 
 interface VerseCardProps {
@@ -22,6 +23,18 @@ export default function VerseCard({ verse }: VerseCardProps) {
         <p className="mt-3 font-body text-xs leading-relaxed text-muted-foreground">
           {verse.context}
         </p>
+      ) : null}
+
+      {verse.sourceUrl ? (
+        <a
+          href={verse.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex items-center gap-1 text-xs text-primary/80 hover:text-primary transition-colors"
+        >
+          <ExternalLink className="h-3 w-3" />
+          {verse.sourceLabel || "Read more"}
+        </a>
       ) : null}
     </div>
   );

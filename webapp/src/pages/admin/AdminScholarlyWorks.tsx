@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import SourceLinkFields from "@/components/admin/SourceLinkFields";
 
 export default function AdminScholarlyWorks() {
   const { data: works, isLoading } = useScholarlyWorks();
@@ -45,6 +46,8 @@ export default function AdminScholarlyWorks() {
   const [author, setAuthor] = useState<string>("");
   const [deathDate, setDeathDate] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<number>(0);
+  const [sourceLabel, setSourceLabel] = useState<string>("");
+  const [sourceUrl, setSourceUrl] = useState<string>("");
 
   const resetForm = () => {
     setEditingId(null);
@@ -52,6 +55,8 @@ export default function AdminScholarlyWorks() {
     setAuthor("");
     setDeathDate("");
     setSortOrder(0);
+    setSourceLabel("");
+    setSourceUrl("");
   };
 
   const openCreate = () => {
@@ -65,6 +70,8 @@ export default function AdminScholarlyWorks() {
     setAuthor(item.author);
     setDeathDate(item.deathDate);
     setSortOrder(item.sortOrder);
+    setSourceLabel(item.sourceLabel || "");
+    setSourceUrl(item.sourceUrl || "");
     setDialogOpen(true);
   };
 
@@ -99,7 +106,7 @@ export default function AdminScholarlyWorks() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    saveMutation.mutate({ title, author, deathDate, sortOrder });
+    saveMutation.mutate({ title, author, deathDate, sourceLabel: sourceLabel || null, sourceUrl: sourceUrl || null, sortOrder });
   };
 
   return (
@@ -150,6 +157,12 @@ export default function AdminScholarlyWorks() {
                   required
                 />
               </div>
+              <SourceLinkFields
+                sourceLabel={sourceLabel}
+                sourceUrl={sourceUrl}
+                onSourceLabelChange={setSourceLabel}
+                onSourceUrlChange={setSourceUrl}
+              />
               <div className="space-y-2">
                 <Label htmlFor="sortOrder">Sort Order</Label>
                 <Input
@@ -158,6 +171,7 @@ export default function AdminScholarlyWorks() {
                   value={sortOrder}
                   onChange={(e) => setSortOrder(Number(e.target.value))}
                 />
+                <p className="text-xs text-muted-foreground">Starts from 0 (0 = first)</p>
               </div>
               <div className="flex gap-3">
                 <Button type="submit" disabled={saveMutation.isPending}>

@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import SourceLinkFields from "@/components/admin/SourceLinkFields";
 
 export default function AdminInterpretations() {
   const { data: interpretations, isLoading } = useInterpretations();
@@ -46,6 +47,8 @@ export default function AdminInterpretations() {
   const [modernInterpretation, setModernInterpretation] = useState<string>("");
   const [scholarlyCaution, setScholarlyCaution] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<number>(0);
+  const [sourceLabel, setSourceLabel] = useState<string>("");
+  const [sourceUrl, setSourceUrl] = useState<string>("");
 
   const resetForm = () => {
     setEditingId(null);
@@ -53,6 +56,8 @@ export default function AdminInterpretations() {
     setModernInterpretation("");
     setScholarlyCaution("");
     setSortOrder(0);
+    setSourceLabel("");
+    setSourceUrl("");
   };
 
   const openCreate = () => {
@@ -66,6 +71,8 @@ export default function AdminInterpretations() {
     setModernInterpretation(item.modernInterpretation);
     setScholarlyCaution(item.scholarlyCaution);
     setSortOrder(item.sortOrder);
+    setSourceLabel(item.sourceLabel || "");
+    setSourceUrl(item.sourceUrl || "");
     setDialogOpen(true);
   };
 
@@ -109,6 +116,8 @@ export default function AdminInterpretations() {
       prophecy,
       modernInterpretation,
       scholarlyCaution,
+      sourceLabel: sourceLabel || null,
+      sourceUrl: sourceUrl || null,
       sortOrder,
     });
   };
@@ -163,6 +172,12 @@ export default function AdminInterpretations() {
                   required
                 />
               </div>
+              <SourceLinkFields
+                sourceLabel={sourceLabel}
+                sourceUrl={sourceUrl}
+                onSourceLabelChange={setSourceLabel}
+                onSourceUrlChange={setSourceUrl}
+              />
               <div className="space-y-2">
                 <Label htmlFor="sortOrder">Sort Order</Label>
                 <Input
@@ -171,6 +186,7 @@ export default function AdminInterpretations() {
                   value={sortOrder}
                   onChange={(e) => setSortOrder(Number(e.target.value))}
                 />
+                <p className="text-xs text-muted-foreground">Starts from 0 (0 = first)</p>
               </div>
               <div className="flex gap-3">
                 <Button type="submit" disabled={saveMutation.isPending}>

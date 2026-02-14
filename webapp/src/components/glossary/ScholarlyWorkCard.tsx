@@ -1,3 +1,4 @@
+import { ExternalLink } from "lucide-react";
 import type { ScholarlyWork } from "@/lib/types";
 
 interface ScholarlyWorkCardProps {
@@ -16,6 +17,17 @@ export default function ScholarlyWorkCard({ work }: ScholarlyWorkCardProps) {
       <p className="mt-1 font-body text-xs text-muted-foreground/70">
         {work.deathDate}
       </p>
+      {work.sourceUrl ? (
+        <a
+          href={work.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex items-center gap-1 text-xs text-primary/80 hover:text-primary transition-colors"
+        >
+          <ExternalLink className="h-3 w-3" />
+          {work.sourceLabel || "Read more"}
+        </a>
+      ) : null}
     </div>
   );
 }

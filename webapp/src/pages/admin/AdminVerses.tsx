@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import SourceLinkFields from "@/components/admin/SourceLinkFields";
 
 export default function AdminVerses() {
   const { data: verses, isLoading } = useQuranicVerses();
@@ -46,6 +47,8 @@ export default function AdminVerses() {
   const [text, setText] = useState<string>("");
   const [context, setContext] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<number>(0);
+  const [sourceLabel, setSourceLabel] = useState<string>("");
+  const [sourceUrl, setSourceUrl] = useState<string>("");
 
   const resetForm = () => {
     setEditingId(null);
@@ -53,6 +56,8 @@ export default function AdminVerses() {
     setText("");
     setContext("");
     setSortOrder(0);
+    setSourceLabel("");
+    setSourceUrl("");
   };
 
   const openCreate = () => {
@@ -66,6 +71,8 @@ export default function AdminVerses() {
     setText(item.text);
     setContext(item.context || "");
     setSortOrder(item.sortOrder);
+    setSourceLabel(item.sourceLabel || "");
+    setSourceUrl(item.sourceUrl || "");
     setDialogOpen(true);
   };
 
@@ -104,6 +111,8 @@ export default function AdminVerses() {
       reference,
       text,
       context: context || null,
+      sourceLabel: sourceLabel || null,
+      sourceUrl: sourceUrl || null,
       sortOrder,
     });
   };
@@ -156,6 +165,12 @@ export default function AdminVerses() {
                   onChange={(e) => setContext(e.target.value)}
                 />
               </div>
+              <SourceLinkFields
+                sourceLabel={sourceLabel}
+                sourceUrl={sourceUrl}
+                onSourceLabelChange={setSourceLabel}
+                onSourceUrlChange={setSourceUrl}
+              />
               <div className="space-y-2">
                 <Label htmlFor="sortOrder">Sort Order</Label>
                 <Input
@@ -164,6 +179,7 @@ export default function AdminVerses() {
                   value={sortOrder}
                   onChange={(e) => setSortOrder(Number(e.target.value))}
                 />
+                <p className="text-xs text-muted-foreground">Starts from 0 (0 = first)</p>
               </div>
               <div className="flex gap-3">
                 <Button type="submit" disabled={saveMutation.isPending}>

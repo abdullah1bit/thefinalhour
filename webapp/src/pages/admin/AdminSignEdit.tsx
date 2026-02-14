@@ -17,6 +17,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft } from "lucide-react";
+import SourceLinkFields from "@/components/admin/SourceLinkFields";
+import ImageUpload from "@/components/admin/ImageUpload";
+import type { ImageSettings } from "@/lib/types";
 
 export default function AdminSignEdit() {
   const { id } = useParams();
@@ -33,6 +36,10 @@ export default function AdminSignEdit() {
   const [category, setCategory] = useState<string>("");
   const [period, setPeriod] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<number>(0);
+  const [sourceLabel, setSourceLabel] = useState<string>("");
+  const [sourceUrl, setSourceUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageSettings, setImageSettings] = useState<ImageSettings | null>(null);
 
   const { data: existingSign } = useQuery({
     queryKey: ["signs", id],
@@ -50,6 +57,10 @@ export default function AdminSignEdit() {
       setCategory(existingSign.category || "");
       setPeriod(existingSign.period || "");
       setSortOrder(existingSign.sortOrder);
+      setSourceLabel(existingSign.sourceLabel || "");
+      setSourceUrl(existingSign.sourceUrl || "");
+      setImageUrl(existingSign.imageUrl || null);
+      setImageSettings(existingSign.imageSettings ? JSON.parse(existingSign.imageSettings) : null);
     }
   }, [existingSign]);
 
@@ -83,6 +94,10 @@ export default function AdminSignEdit() {
       status,
       category: category || null,
       period: period || null,
+      sourceLabel: sourceLabel || null,
+      sourceUrl: sourceUrl || null,
+      imageUrl,
+      imageSettings: imageSettings ? JSON.stringify(imageSettings) : null,
       sortOrder,
     });
   };
@@ -169,6 +184,7 @@ export default function AdminSignEdit() {
                   value={sortOrder}
                   onChange={(e) => setSortOrder(Number(e.target.value))}
                 />
+                <p className="text-xs text-muted-foreground">Starts from 0 (0 = first)</p>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -191,6 +207,18 @@ export default function AdminSignEdit() {
                 />
               </div>
             </div>
+            <ImageUpload
+              imageUrl={imageUrl}
+              imageSettings={imageSettings}
+              onImageUrlChange={setImageUrl}
+              onImageSettingsChange={setImageSettings}
+            />
+            <SourceLinkFields
+              sourceLabel={sourceLabel}
+              sourceUrl={sourceUrl}
+              onSourceLabelChange={setSourceLabel}
+              onSourceUrlChange={setSourceUrl}
+            />
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={saveMutation.isPending}>
                 {saveMutation.isPending ? "Saving..." : isNew ? "Create Sign" : "Update Sign"}

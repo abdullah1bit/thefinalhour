@@ -43,6 +43,8 @@ A production-ready informational website presenting Islamic eschatology in a res
 
 - **Storytelling homepage** with smooth scroll, expandable cards, section progress nav
 - **Admin panel** with full CRUD for all content types
+- **Source links** on all content types (optional link to external sources/further reading)
+- **Image upload** for signs, major signs, and timeline events with crop/fit/position settings
 - **Announcement banners** (default, warning, success, donation variants)
 - **Site settings** management (title, tagline, featured verse)
 - **Search** across all content types (Ctrl+K / Cmd+K)
