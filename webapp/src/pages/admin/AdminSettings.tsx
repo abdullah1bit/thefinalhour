@@ -166,14 +166,14 @@ export default function AdminSettings() {
               <div className="space-y-2">
                 <Label htmlFor="featuredVerseId">Featured Verse</Label>
                 <Select
-                  value={featuredVerseId}
-                  onValueChange={(val) => setValue("featuredVerseId", val)}
+                  value={featuredVerseId || "none"}
+                  onValueChange={(val) => setValue("featuredVerseId", val === "none" ? "" : val)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a verse..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
                     {(verses || []).map((verse) => (
                       <SelectItem key={verse.id} value={verse.id}>
                         {verse.reference} - {verse.text.slice(0, 60)}...
