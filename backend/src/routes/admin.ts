@@ -514,21 +514,24 @@ adminRouter.post("/import", async (c) => {
   const parsed = importSchema.parse(body);
   const results: Record<string, number> = {};
 
-  // Use a transaction for atomicity
-  await prisma.$transaction(async (tx) => {
-    if (parsed.signs?.length) {
+  if (parsed.signs?.length) {
+    const items = parsed.signs;
+    await prisma.$transaction(async (tx) => {
       await tx.sign.deleteMany();
-      for (const sign of parsed.signs) {
+      for (const sign of items) {
         const { id, createdAt, updatedAt, ...data } = sign;
         await tx.sign.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
       }
-      results.signs = parsed.signs.length;
-    }
+    }, { timeout: 15000 });
+    results.signs = items.length;
+  }
 
-    if (parsed.majorSigns?.length) {
+  if (parsed.majorSigns?.length) {
+    const items = parsed.majorSigns;
+    await prisma.$transaction(async (tx) => {
       await tx.majorSignDetail.deleteMany();
       await tx.majorSign.deleteMany();
-      for (const ms of parsed.majorSigns) {
+      for (const ms of items) {
         const { id, createdAt, updatedAt, details, ...data } = ms;
         await tx.majorSign.create({
           data: {
@@ -545,74 +548,95 @@ adminRouter.post("/import", async (c) => {
           },
         });
       }
-      results.majorSigns = parsed.majorSigns.length;
-    }
+    }, { timeout: 15000 });
+    results.majorSigns = items.length;
+  }
 
-    if (parsed.glossary?.length) {
+  if (parsed.glossary?.length) {
+    const items = parsed.glossary;
+    await prisma.$transaction(async (tx) => {
       await tx.glossaryTerm.deleteMany();
-      for (const term of parsed.glossary) {
+      for (const term of items) {
         const { id, createdAt, updatedAt, ...data } = term;
         await tx.glossaryTerm.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
       }
-      results.glossary = parsed.glossary.length;
-    }
+    }, { timeout: 15000 });
+    results.glossary = items.length;
+  }
 
-    if (parsed.verses?.length) {
+  if (parsed.verses?.length) {
+    const items = parsed.verses;
+    await prisma.$transaction(async (tx) => {
       await tx.quranicVerse.deleteMany();
-      for (const verse of parsed.verses) {
+      for (const verse of items) {
         const { id, createdAt, updatedAt, ...data } = verse;
         await tx.quranicVerse.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
       }
-      results.verses = parsed.verses.length;
-    }
+    }, { timeout: 15000 });
+    results.verses = items.length;
+  }
 
-    if (parsed.scholarlyWorks?.length) {
+  if (parsed.scholarlyWorks?.length) {
+    const items = parsed.scholarlyWorks;
+    await prisma.$transaction(async (tx) => {
       await tx.scholarlyWork.deleteMany();
-      for (const work of parsed.scholarlyWorks) {
+      for (const work of items) {
         const { id, createdAt, updatedAt, ...data } = work;
         await tx.scholarlyWork.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
       }
-      results.scholarlyWorks = parsed.scholarlyWorks.length;
-    }
+    }, { timeout: 15000 });
+    results.scholarlyWorks = items.length;
+  }
 
-    if (parsed.timeline?.length) {
+  if (parsed.timeline?.length) {
+    const items = parsed.timeline;
+    await prisma.$transaction(async (tx) => {
       await tx.timelineEvent.deleteMany();
-      for (const event of parsed.timeline) {
+      for (const event of items) {
         const { id, createdAt, updatedAt, ...data } = event;
         await tx.timelineEvent.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
       }
-      results.timeline = parsed.timeline.length;
-    }
+    }, { timeout: 15000 });
+    results.timeline = items.length;
+  }
 
-    if (parsed.interpretations?.length) {
+  if (parsed.interpretations?.length) {
+    const items = parsed.interpretations;
+    await prisma.$transaction(async (tx) => {
       await tx.interpretation.deleteMany();
-      for (const interp of parsed.interpretations) {
+      for (const interp of items) {
         const { id, createdAt, updatedAt, ...data } = interp;
         await tx.interpretation.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
       }
-      results.interpretations = parsed.interpretations.length;
-    }
+    }, { timeout: 15000 });
+    results.interpretations = items.length;
+  }
 
-    if (parsed.banners?.length) {
+  if (parsed.banners?.length) {
+    const items = parsed.banners;
+    await prisma.$transaction(async (tx) => {
       await tx.announcementBanner.deleteMany();
-      for (const banner of parsed.banners) {
+      for (const banner of items) {
         const { id, createdAt, updatedAt, ...data } = banner;
         await tx.announcementBanner.create({ data: { ...data, sortOrder: data.sortOrder ?? 0 } });
       }
-      results.banners = parsed.banners.length;
-    }
+    }, { timeout: 15000 });
+    results.banners = items.length;
+  }
 
-    if (parsed.settings && Object.keys(parsed.settings).length > 0) {
-      for (const [key, value] of Object.entries(parsed.settings)) {
+  if (parsed.settings && Object.keys(parsed.settings).length > 0) {
+    const settings = parsed.settings;
+    await prisma.$transaction(async (tx) => {
+      for (const [key, value] of Object.entries(settings)) {
         await tx.siteSetting.upsert({
           where: { key },
-          update: { value },
-          create: { key, value },
+          update: { value: value as string },
+          create: { key, value: value as string },
         });
       }
-      results.settings = Object.keys(parsed.settings).length;
-    }
-  }, { timeout: 30000 }); // Increase timeout to 30 seconds for large imports
+    }, { timeout: 15000 });
+    results.settings = Object.keys(settings).length;
+  }
 
   return c.json({ data: { imported: results } });
 });
