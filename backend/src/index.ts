@@ -80,6 +80,9 @@ const allowed = [
   /^https:\/\/[a-z0-9-]+\.vibecodeapp\.com$/,
   /^https:\/\/[a-z0-9-]+\.vibecode\.dev$/,
   /^https:\/\/vibecode\.dev$/,
+  /^https:\/\/[a-z0-9-]+\.vercel\.app$/, // Allow all Vercel domains
+  /^https:\/\/[a-z0-9-]+\.thefinalhour\.com$/, // Allow the custom domain
+  /^https:\/\/thefinalhour\.com$/,
 ];
 
 app.use(
