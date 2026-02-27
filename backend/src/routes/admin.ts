@@ -612,7 +612,7 @@ adminRouter.post("/import", async (c) => {
       }
       results.settings = Object.keys(parsed.settings).length;
     }
-  });
+  }, { timeout: 30000 }); // Increase timeout to 30 seconds for large imports
 
   return c.json({ data: { imported: results } });
 });
