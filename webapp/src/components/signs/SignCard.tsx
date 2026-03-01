@@ -28,7 +28,7 @@ const statusBgMap: Record<string, string> = {
 
 export default function SignCard({ sign, index = 0 }: SignCardProps) {
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -74,6 +74,6 @@ export default function SignCard({ sign, index = 0 }: SignCardProps) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }

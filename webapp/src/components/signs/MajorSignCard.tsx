@@ -17,7 +17,7 @@ export default function MajorSignCard({ sign }: MajorSignCardProps) {
     : null;
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -152,6 +152,6 @@ export default function MajorSignCard({ sign }: MajorSignCardProps) {
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </motion.div>
+    </motion.article>
   );
 }

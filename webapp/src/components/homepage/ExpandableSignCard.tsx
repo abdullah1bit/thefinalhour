@@ -32,7 +32,7 @@ export default function ExpandableSignCard({ sign }: { sign: Sign }) {
     : null;
 
   return (
-    <div className={cn("rounded-lg border bg-card/60 transition-colors", colors.border)}>
+    <article className={cn("rounded-lg border bg-card/60 transition-colors", colors.border)}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -40,9 +40,9 @@ export default function ExpandableSignCard({ sign }: { sign: Sign }) {
       >
         <div className={cn("h-2 w-2 rounded-full flex-shrink-0", colors.dot)} />
         <div className="min-w-0 flex-1">
-          <h4 className="text-sm font-medium text-foreground leading-snug">
+          <h3 className="text-sm font-medium text-foreground leading-snug">
             {sign.title}
-          </h4>
+          </h3>
           <span className="text-xs text-muted-foreground">{sign.source}</span>
         </div>
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -95,6 +95,6 @@ export default function ExpandableSignCard({ sign }: { sign: Sign }) {
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </div>
+    </article>
   );
 }

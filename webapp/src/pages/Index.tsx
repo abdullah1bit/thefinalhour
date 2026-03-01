@@ -12,12 +12,15 @@ import InterpretationsSection from "@/components/homepage/InterpretationsSection
 import FeaturedVerse from "@/components/home/FeaturedVerse";
 import BottomCTA from "@/components/homepage/BottomCTA";
 import SectionDivider from "@/components/layout/SectionDivider";
+import SeoSchema from "@/components/seo/SeoSchema";
 
 const Index = () => {
   const { data, isLoading } = useHomepageContent();
 
   return (
-    <div className="relative">
+    <main className="relative">
+      <SeoSchema type="WebSite" data={data} />
+      <SeoSchema type="CollectionPage" data={data} />
       <HomepageProgressNav />
       {data?.banners && data.banners.length > 0 ? (
         <AnnouncementBar banners={data.banners} />
@@ -53,7 +56,7 @@ const Index = () => {
       <FeaturedVerse verse={data?.featuredVerse} />
       <SectionDivider />
       <BottomCTA />
-    </div>
+    </main>
   );
 };
 

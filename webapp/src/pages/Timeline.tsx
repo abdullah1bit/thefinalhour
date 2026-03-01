@@ -5,6 +5,7 @@ import TimelineNode from "@/components/timeline/TimelineNode";
 import TimelineLegend from "@/components/timeline/TimelineLegend";
 import TimelineEndMarker from "@/components/timeline/TimelineEndMarker";
 import { useTimelineEvents } from "@/hooks/use-content";
+import SeoSchema from "@/components/seo/SeoSchema";
 
 export default function Timeline() {
   const { data: timelineSequence, isLoading } = useTimelineEvents();
@@ -26,6 +27,7 @@ export default function Timeline() {
       title="The Sequence"
       subtitle="The prophesied order of events from past to future"
     >
+      <SeoSchema type="EventSeries" data={timelineSequence} />
       {/* Legend */}
       <TimelineLegend />
 

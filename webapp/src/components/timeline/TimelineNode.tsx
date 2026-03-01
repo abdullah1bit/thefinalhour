@@ -104,7 +104,7 @@ function TimelineCard({ event, index, alignment }: TimelineCardProps) {
   }
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, x: alignment === "left" ? -20 : 20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -182,6 +182,6 @@ function TimelineCard({ event, index, alignment }: TimelineCardProps) {
           alignment === "right" ? "md:right-4" : "left-4"
         )}
       />
-    </motion.div>
+    </motion.article>
   );
 }
