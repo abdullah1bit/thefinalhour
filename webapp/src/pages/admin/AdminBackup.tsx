@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -27,8 +27,12 @@ export default function AdminBackup() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       toast({ title: "Export downloaded successfully" });
-    } catch {
-      toast({ title: "Export failed", variant: "destructive" });
+    } catch (error) {
+      toast({
+        title: "Export failed",
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive"
+      });
     }
   };
 

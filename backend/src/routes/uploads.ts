@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { z } from "zod";
 import { requireAdmin } from "../middleware/requireAdmin";
 import { uploadToCloudinary } from "../lib/cloudinary";
 
@@ -10,35 +11,35 @@ uploadsRouter.use("*", requireAdmin);
 uploadsRouter.post("/", async (c) => {
   try {
     const formData = await c.req.formData();
-    const file = formData.get("file") as File | null;
+    const file = formData.get("file");
 
-    if (!file) {
-      return c.json({ error: { message: "No file provided", code: "BAD_REQUEST" } }, 400);
-    }
+    const fileSchema = z.instanceof(File, { message: "No file provided" })
+      .refine(
+        (f) => f.size <= 5 * 1024 * 1024,
+        "File too large. Maximum size is 5MB."
+      )
+      .refine(
+        (f) => ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"].includes(f.type),
+        "Invalid file type. Allowed: JPEG, PNG, WebP, GIF, SVG."
+      );
 
-    // Validate file type (images only)
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
-    if (!allowedTypes.includes(file.type)) {
+    const parseResult = fileSchema.safeParse(file);
+
+    if (!parseResult.success) {
       return c.json(
-        { error: { message: "Invalid file type. Allowed: JPEG, PNG, WebP, GIF, SVG", code: "BAD_REQUEST" } },
+        { error: { message: parseResult.error.errors[0].message, code: "BAD_REQUEST" } },
         400
       );
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      return c.json(
-        { error: { message: "File too large. Maximum size is 5MB", code: "BAD_REQUEST" } },
-        400
-      );
-    }
+    const validatedFile = parseResult.data;
 
     // Upload to Cloudinary instead of local disk
-    const imageUrl = await uploadToCloudinary(file);
+    const imageUrl = await uploadToCloudinary(validatedFile);
 
     // We return the full Cloudinary URL (https://res.cloudinary.com/...)
     return c.json({ data: { url: imageUrl } }, 201);
-    
+
   } catch (error) {
     console.error("Cloudinary upload error:", error);
     return c.json({ error: { message: "Failed to upload image to cloud storage", code: "INTERNAL_ERROR" } }, 500);

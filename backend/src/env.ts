@@ -8,8 +8,8 @@ const envSchema = z.object({
   // Server Configuration
   PORT: z.string().optional().default("3000"),
   NODE_ENV: z.string().optional(),
-  DATABASE_URL: z.string().optional().default("file:./dev.db"),
-  BETTER_AUTH_SECRET: z.string().min(1).default("super-secret-key-change-in-production"),
+  DATABASE_URL: z.string().url(),
+  BETTER_AUTH_SECRET: z.string().min(1),
 });
 
 /**
@@ -50,6 +50,6 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     // eslint-disable-next-line import/namespace
-    interface ProcessEnv extends z.infer<typeof envSchema> {}
+    interface ProcessEnv extends z.infer<typeof envSchema> { }
   }
 }
