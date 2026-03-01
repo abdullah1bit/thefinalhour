@@ -9,6 +9,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { PostHogProvider } from "@/components/analytics/PostHogProvider";
 import { SEO } from "@/components/seo/SEO";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Index from "./pages/Index";
 import Timeline from "./pages/Timeline";
 import Glossary from "./pages/Glossary";
@@ -61,6 +62,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <SpeedInsights />
         <BrowserRouter>
           <ScrollToTop />
           <PageTracker />
