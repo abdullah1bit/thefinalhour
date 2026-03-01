@@ -115,6 +115,7 @@ export interface AnnouncementBanner {
 export interface HomepageData {
   fulfilledSigns: Sign[];
   unfoldingSigns: Sign[];
+  approachingSigns: Sign[];
   majorSigns: MajorSign[];
   interpretations: Interpretation[];
   featuredVerse: QuranicVerse | null;

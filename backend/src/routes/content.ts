@@ -5,7 +5,7 @@ const contentRouter = new Hono();
 
 // GET /api/content/homepage - returns all homepage data in one call
 contentRouter.get("/homepage", async (c) => {
-  const [fulfilledSigns, unfoldingSigns, majorSigns, interpretations, banners, allSettings] =
+  const [fulfilledSigns, unfoldingSigns, approachingSigns, majorSigns, interpretations, banners, allSettings] =
     await Promise.all([
       prisma.sign.findMany({
         where: { status: "fulfilled" },
@@ -13,6 +13,10 @@ contentRouter.get("/homepage", async (c) => {
       }),
       prisma.sign.findMany({
         where: { status: "unfolding" },
+        orderBy: { sortOrder: "asc" },
+      }),
+      prisma.sign.findMany({
+        where: { status: "approaching" },
         orderBy: { sortOrder: "asc" },
       }),
       prisma.majorSign.findMany({
@@ -49,6 +53,7 @@ contentRouter.get("/homepage", async (c) => {
     data: {
       fulfilledSigns: fulfilledSigns.map(serializeSign),
       unfoldingSigns: unfoldingSigns.map(serializeSign),
+      approachingSigns: approachingSigns.map(serializeSign),
       majorSigns: majorSigns.map(serializeMajorSign),
       interpretations: interpretations.map(serializeTimestamped),
       featuredVerse: featuredVerse ? serializeTimestamped(featuredVerse) : null,
@@ -62,7 +67,7 @@ contentRouter.get("/homepage", async (c) => {
   });
 });
 
-function serializeSign(sign: { createdAt: Date; updatedAt: Date; [key: string]: unknown }) {
+function serializeSign(sign: { createdAt: Date; updatedAt: Date;[key: string]: unknown }) {
   return {
     ...sign,
     createdAt: sign.createdAt.toISOString(),
@@ -85,7 +90,7 @@ function serializeMajorSign(ms: {
   };
 }
 
-function serializeTimestamped(item: { createdAt: Date; updatedAt: Date; [key: string]: unknown }) {
+function serializeTimestamped(item: { createdAt: Date; updatedAt: Date;[key: string]: unknown }) {
   return {
     ...item,
     createdAt: item.createdAt.toISOString(),

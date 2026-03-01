@@ -7,6 +7,7 @@ import FoundationSection from "@/components/homepage/FoundationSection";
 import FulfilledSection from "@/components/homepage/FulfilledSection";
 import UnfoldingSection from "@/components/homepage/UnfoldingSection";
 import MajorSignsSection from "@/components/homepage/MajorSignsSection";
+import ApproachingSection from "@/components/homepage/ApproachingSection";
 import InterpretationsSection from "@/components/homepage/InterpretationsSection";
 import FeaturedVerse from "@/components/home/FeaturedVerse";
 import BottomCTA from "@/components/homepage/BottomCTA";
@@ -35,6 +36,12 @@ const Index = () => {
           <FulfilledSection signs={data.fulfilledSigns} />
           <SectionDivider label="Signs Unfolding" />
           <UnfoldingSection signs={data.unfoldingSigns} />
+          {data.approachingSigns && data.approachingSigns.length > 0 && (
+            <>
+              <SectionDivider label="Signs Approaching" />
+              <ApproachingSection signs={data.approachingSigns} />
+            </>
+          )}
           <SectionDivider label="The Major Signs" />
           <MajorSignsSection signs={data.majorSigns} />
           <SectionDivider label="Modern Interpretations" />
