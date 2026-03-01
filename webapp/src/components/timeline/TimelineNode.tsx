@@ -126,6 +126,7 @@ function TimelineCard({ event, index, alignment }: TimelineCardProps) {
           <img
             src={event.imageUrl.startsWith("http") ? event.imageUrl : `${API_BASE}${event.imageUrl}`}
             alt={event.title}
+            loading="lazy"
             className="h-full w-full"
             style={{
               objectFit: (imgSettings?.objectFit || "cover") as "cover" | "contain",

@@ -1,23 +1,22 @@
-# Post-Launch & SEO Audit Report
+# Post-Launch & SEO Audit Report (Re-Evaluation)
 
-## 1. Critical SEO Blockers
-- **Duplicate Metadata & Canonical URLs (SPA Issue):** The application is a Client-Side Rendered (CSR) Vite SPA. The `index.html` contains static `<title>`, `<meta name="description">`, `<meta property="og:*">`, and a static `<link rel="canonical" href="/" />`. Since these are not dynamically updated via a library (like `react-helmet-async`), search engines will see all routes (e.g., `/timeline`, `/glossary`) as duplicates of the homepage.
-- **Dynamic Content Indexing:** Without Server-Side Rendering (SSR) or dynamic meta tags, social sharing cards for deep links will always show the homepage preview.
+## 1. Indexing & SEO (Discoverability) 
+- ✅ **Robots.txt & Sitemap:** Configured correctly to allow indexing.
+- ✅ **Dynamic Metadata & Canonical URLs:** Fixed. The application now uses `react-helmet-async` with a reusable `<SEO />` component to inject dynamic `<title>`, `<meta name="description">`, and `canonical` tags for each route (Homepage, Timeline, Glossary). Social sharing cards will now render accurately for deep links.
+- ✅ **Semantic HTML:** The application utilizes proper semantic elements (`<main>`, `<article>`, `<h1>`, `<h2>`) across the board.
 
-*(Note: `robots.txt` and `sitemap.xml` are correctly configured to allow indexing).*
+## 2. Production Monitoring & Analytics
+- ✅ **Analytics Implementation:** Fixed. PostHog has been installed and integrated into the React application with a `<PostHogProvider>` to track page views and user events.
+- ❌ **Error Tracking Missing (Monitoring Gap):** No production error-tracking tool (e.g., Sentry, LogRocket, Datadog) is configured to catch client-side or backend crashes. The production environment is still flying blind to runtime errors encountered by end-users.
+- ✅ **Console Logs:** Clean. There are no `console.log` statements left in the `webapp` production code. (The `backend` only contains `console.log` statements in setup/seed scripts, which is acceptable).
 
-## 2. Monitoring Gaps
-- **Analytics Missing:** No front-end web analytics tracking scripts (e.g., Google Analytics, Plausible, PostHog) are initialized in the application or `index.html`.
-- **Error Tracking Missing:** No production error-tracking tool (e.g., Sentry, LogRocket, Datadog) is configured to catch client-side or backend crashes. The production environment is flying blind to runtime errors encountered by end users.
+## 3. Performance & Asset Optimization
+- ✅ **Image Lazy Loading:** Fixed. Added `loading="lazy"` to critical `<img />` tags in `TimelineNode.tsx`, `ExpandableSignCard.tsx`, and `MajorSignCard.tsx` to optimize off-screen loading.
+- ✅ **Caching Headers:** Fixed. The `vercel.json` configuration now establishes strict `Cache-Control` headers (`public, max-age=31536000, immutable`) for static assets to improve returning visual load times.
 
-## 3. Performance Tweaks
-- **Image Lazy Loading:** Found several `<img />` tags in components (`TimelineNode.tsx`, `ExpandableSignCard.tsx`, `MajorSignCard.tsx`) that include proper `alt` attributes but lack modern loading optimizations. Add `loading="lazy"` to images below the fold to improve initial page load speed.
-- **Missing Caching Headers:** The `vercel.json` configuration establishes SPA routing but does not explicitly set `Cache-Control` headers for static assets. This can result in suboptimal load times and Core Web Vitals if edge caching isn't optimally leveraging immutability.
+## 4. Security & Live Configuration
+- ✅ **Security Headers:** Fixed. HTTP security headers (`Strict-Transport-Security`, `Content-Security-Policy`-like settings, `X-Frame-Options`) have been added to `vercel.json`.
+- ✅ **Environment Variables:** Environment variable separation is correctly maintained between `.env.development` and `.env.production` (specifically for PostHog API keys and the API Base URL).
 
-## 4. Action Plan
-- [ ] **SEO (Highest Priority):** Install and configure a meta-tag manager (e.g., `react-helmet-async`) in the web application to dynamically update the `<title>`, description, canonical URL, and Open Graph tags based on the active route.
-- [ ] **Monitoring:** Set up and integrate a privacy-friendly analytics tracker (e.g., Plausible or PostHog) and include the initialization script in `index.html` or the main layout.
-- [ ] **Error Tracking:** Install an error tracker like Sentry in both the React `webapp` and the Hono `backend` to trace production exceptions.
-- [ ] **Performance:** Review all `<img />` tags throughout the `webapp/src/components` directory and add `loading="lazy"` where appropriate.
-- [ ] **Security & Caching:** Update `vercel.json` to include `"headers"` for `Cache-Control` on static assets, and add standard HTTP security headers (`Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`).
-- [ ] **Environment Structure:** Ensure there is a strict separation between `.env.development` and `.env.production` (verify via your hosting dashboard, as local `.env` files are correctly excluded from git).
+## Action Plan (Remaining Items)
+- [ ] **Error Tracking:** Install an error tracker like Sentry in both the React `webapp` and the Hono `backend` to trace production exceptions. Aside from this, the site is exceptionally well-optimized for launch.

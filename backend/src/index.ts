@@ -1,5 +1,7 @@
+import "./instrument";
 import "@vibecodeapp/proxy"; // DO NOT REMOVE OTHERWISE VIBECODE PROXY WILL NOT WORK
 import { Hono } from "hono";
+import * as Sentry from "@sentry/node";
 import { cors } from "hono/cors";
 import "./env";
 import { logger } from "hono/logger";
@@ -28,6 +30,9 @@ const app = new Hono();
 // ─── Global Error Handler ───────────────────────────────────────
 app.onError((err, c) => {
   console.error("Unhandled error:", err);
+
+  // Capture ALL unhandled errors to Sentry
+  Sentry.captureException(err);
 
   // Zod validation errors
   if (err instanceof ZodError) {
@@ -118,6 +123,13 @@ app.route("/api/interpretations", interpretationsRouter);
 app.route("/api/search", searchRouter);
 app.route("/api/site", siteRouter);
 app.route("/api/analytics", analyticsRouter);
+
+// Sentry Debug Route
+app.get("/api/debug-sentry", () => {
+  Sentry.logger.info('User triggered test error', { action: 'test_error_endpoint' });
+  Sentry.metrics.count('test_counter', 1);
+  throw new Error("My first Sentry error!");
+});
 
 // Upload routes (must be before general admin route)
 app.route("/api/admin/upload", uploadsRouter);

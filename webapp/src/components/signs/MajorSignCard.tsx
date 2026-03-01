@@ -95,6 +95,7 @@ export default function MajorSignCard({ sign }: MajorSignCardProps) {
                   <img
                     src={sign.imageUrl.startsWith("http") ? sign.imageUrl : `${API_BASE}${sign.imageUrl}`}
                     alt={sign.title}
+                    loading="lazy"
                     className="h-full w-full"
                     style={{
                       objectFit: (imgSettings?.objectFit || "cover") as "cover" | "contain",

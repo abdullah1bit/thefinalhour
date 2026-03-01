@@ -27,7 +27,7 @@ uploadsRouter.post("/", async (c) => {
 
     if (!parseResult.success) {
       return c.json(
-        { error: { message: parseResult.error.errors[0].message, code: "BAD_REQUEST" } },
+        { error: { message: (parseResult.error as any).issues[0].message, code: "BAD_REQUEST" } },
         400
       );
     }
