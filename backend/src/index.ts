@@ -20,6 +20,7 @@ import { adminRouter } from "./routes/admin";
 import { siteRouter } from "./routes/site";
 import { searchRouter } from "./routes/search";
 import { uploadsRouter } from "./routes/uploads";
+import { analyticsRouter } from "./routes/analytics";
 import { serveStatic } from "hono/bun";
 
 const app = new Hono();
@@ -116,6 +117,7 @@ app.route("/api/timeline", timelineRouter);
 app.route("/api/interpretations", interpretationsRouter);
 app.route("/api/search", searchRouter);
 app.route("/api/site", siteRouter);
+app.route("/api/analytics", analyticsRouter);
 
 // Upload routes (must be before general admin route)
 app.route("/api/admin/upload", uploadsRouter);

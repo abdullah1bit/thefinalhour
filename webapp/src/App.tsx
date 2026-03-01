@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { api } from "@/lib/api";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Index from "./pages/Index";
@@ -37,6 +38,21 @@ function ScrollToTop() {
   return null;
 }
 
+function PageTracker() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Don't track admin pages
+    if (pathname.startsWith("/admin")) return;
+
+    api.post("/api/analytics/track", { path: pathname })
+      .catch(err => console.error("Error tracking visit:", err));
+  }, [pathname]);
+
+  return null;
+}
+
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -44,6 +60,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <PageTracker />
         <Routes>
           {/* Admin routes - no main layout */}
           <Route path="/admin/login" element={<AdminLogin />} />

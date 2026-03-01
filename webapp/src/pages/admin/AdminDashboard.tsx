@@ -21,6 +21,7 @@ import {
   useInterpretations,
   useBanners,
 } from "@/hooks/use-content";
+import { VisitorStats } from "@/components/admin/VisitorStats";
 
 interface StatCardProps {
   title: string;
@@ -70,6 +71,7 @@ export default function AdminDashboard() {
       <h2 className="font-heading text-2xl font-bold text-foreground mb-6">
         Dashboard
       </h2>
+      <VisitorStats />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <StatCard
           title="Signs"

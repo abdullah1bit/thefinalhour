@@ -197,3 +197,14 @@ model SiteSetting {
   key   String @unique
   value String @db.Text
 }
+
+// ─── Analytics ────────────────────────────────────────────────────
+model PageVisit {
+  id          String   @id @default(cuid())
+  path        String
+  countryCode String?
+  visitedAt   DateTime @default(now())
+
+  @@index([visitedAt])
+  @@index([countryCode])
+}
