@@ -28,7 +28,12 @@ const statusConfig: Record<SignStatus, { dot: string; bg: string; text: string; 
 };
 
 export default function StatusBadge({ status, label }: StatusBadgeProps) {
-  const config = statusConfig[status];
+  const config = statusConfig[status] || {
+    dot: "bg-muted-foreground",
+    bg: "bg-muted border-border",
+    text: "text-muted-foreground",
+    defaultLabel: status || "Unknown",
+  };
 
   return (
     <span

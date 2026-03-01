@@ -96,9 +96,12 @@ interface TimelineCardProps {
 }
 
 function TimelineCard({ event, index, alignment }: TimelineCardProps) {
-  const imgSettings: ImageSettings | null = event.imageSettings
-    ? JSON.parse(event.imageSettings)
-    : null;
+  let imgSettings: ImageSettings | null = null;
+  try {
+    imgSettings = event.imageSettings ? JSON.parse(event.imageSettings) : null;
+  } catch (e) {
+    console.error("Failed to parse timeline image settings:", e);
+  }
 
   return (
     <motion.div
