@@ -43,13 +43,3 @@ cp webapp/.env.example webapp/.env
 Do not commit real `.env` files, database files, API keys, admin passwords, or exported backups.
 
 For contribution workflow and content guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Open Source Readiness
-
-This repository is being prepared for public collaboration and OpenAI open source support. Immediate priorities are:
-
-- Replace exposed local secrets with example env files
-- Improve documentation for contributors and reviewers
-- Expand the content model with stronger source linkage
-- Add more authoritative scholarly material and lecture references
-- Keep maintenance simple enough for non-developers through the admin panel
