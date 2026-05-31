@@ -1,0 +1,32 @@
+---
+import type { AnnouncementBanner } from "@/lib/types";
+
+interface Props {
+  banners: AnnouncementBanner[];
+}
+
+const { banners } = Astro.props;
+const variantClass: Record<string, string> = {
+  default: "border-primary/30 bg-primary/10 text-primary",
+  warning: "border-unfolding/30 bg-unfolding/10 text-unfolding",
+  success: "border-fulfilled/30 bg-fulfilled/10 text-fulfilled",
+  donation: "border-primary/30 bg-card/80 text-foreground",
+};
+---
+
+{banners.length > 0 ? (
+  <section class="px-4 py-4">
+    <div class="mx-auto flex max-w-4xl flex-col gap-2">
+      {banners.map((banner) => (
+        <div class={`rounded-lg border px-4 py-3 text-center text-sm ${variantClass[banner.variant] || variantClass.default}`}>
+          <span>{banner.message}</span>
+          {banner.linkUrl && banner.linkText ? (
+            <a href={banner.linkUrl} class="ml-2 underline underline-offset-4 hover:text-foreground">
+              {banner.linkText}
+            </a>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  </section>
+) : null}

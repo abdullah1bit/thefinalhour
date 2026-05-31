@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/astro/PageHeader.astro";
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import SignCard from "@/components/astro/SignCard.astro";
+import { getPublicContent, groupBy, pageDescription } from "@/lib/public-content";
+
+const { signs: allSigns } = await getPublicContent();
+const signs = allSigns.filter((sign) => sign.status === "fulfilled");
+const groups = groupBy(signs, (sign) => sign.period);
+const description = pageDescription(`Browse ${signs.length} fulfilled signs of the end times in Islam with source references and detail pages.`);
+---
+
+<BaseLayout title="Fulfilled Signs" description={description} path="/signs/fulfilled/">
+  <main>
+    <Breadcrumbs items={[{ href: "/", label: "Home" }, { href: "/signs/", label: "Signs" }, { href: "/signs/fulfilled/", label: "Fulfilled Signs" }]} />
+    <PageHeader title="Fulfilled Signs" subtitle={`${signs.length} signs organized for reading, search, and source review.`} status="fulfilled" />
+    <section class="mx-auto max-w-5xl px-4 py-12 lg:px-8 lg:py-16">
+      <div class="space-y-10">
+        {Object.entries(groups).map(([group, items]) => (
+          <section>
+            <h2 class="mb-4 font-heading text-2xl font-semibold text-foreground">{group}</h2>
+            <div class="grid gap-3 md:grid-cols-2">{items.map((sign) => <SignCard sign={sign} compact />)}</div>
+          </section>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,52 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/astro/PageHeader.astro";
+import TimelineCard from "@/components/astro/TimelineCard.astro";
+import { getPublicContent } from "@/lib/public-content";
+
+const { timeline } = await getPublicContent();
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "EventSeries",
+  name: "The Sequence of the Final Hour",
+  description: "The prophesied order of eschatological events in Islam.",
+  subEvent: timeline.map((event, index) => ({
+    "@type": "Event",
+    name: event.title,
+    description: event.description,
+    position: index + 1,
+  })),
+};
+---
+
+<BaseLayout title="Timeline of Signs" description="A visual timeline of the major and minor signs of the end times in Islam." path="/timeline/" jsonLd={jsonLd}>
+  <main>
+    <PageHeader title="The Sequence" subtitle="The prophesied order of events from past to future" />
+    <section class="mx-auto max-w-5xl px-4 py-12 lg:px-8 lg:py-16">
+      <div class="mb-8 flex flex-wrap gap-3 text-sm text-muted-foreground">
+        <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-fulfilled"></span>Fulfilled</span>
+        <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-unfolding"></span>Unfolding</span>
+        <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-approaching"></span>Approaching</span>
+      </div>
+      <div class="relative">
+        <div class="absolute bottom-0 left-[24px] top-0 w-px bg-border/40 md:left-1/2"></div>
+        <div class="space-y-8">
+          {timeline.map((event, index) => {
+            const isEven = index % 2 === 0;
+            return (
+              <div class="relative flex items-start gap-6">
+                <div class="absolute left-[18px] top-5 z-10 h-4 w-4 rounded-full border-2 border-background bg-primary md:left-[calc(50%-8px)]"></div>
+                <div class="hidden w-[calc(50%-24px)] justify-end md:flex">
+                  {isEven ? <TimelineCard event={event} index={index} alignment="right" /> : null}
+                </div>
+                <div class="ml-12 flex-1 md:ml-0 md:w-[calc(50%-24px)]">
+                  {!isEven ? <TimelineCard event={event} index={index} alignment="left" /> : <div class="md:hidden"><TimelineCard event={event} index={index} alignment="left" /></div>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

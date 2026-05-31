@@ -1,0 +1,174 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import AnnouncementBar from "@/components/astro/AnnouncementBar.astro";
+import HeroSection from "@/components/astro/HeroSection.astro";
+import SectionDivider from "@/components/astro/SectionDivider.astro";
+import SignCard from "@/components/astro/SignCard.astro";
+import MajorSignCard from "@/components/astro/MajorSignCard.astro";
+import { getPublicContent, groupBy, groupSignsByStatus } from "@/lib/public-content";
+
+const content = await getPublicContent();
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://thefinalhour.vercel.app";
+const { homepage } = content;
+const fulfilledSigns = homepage.fulfilledSigns.length ? homepage.fulfilledSigns : groupSignsByStatus(content.signs, "fulfilled");
+const unfoldingSigns = homepage.unfoldingSigns.length ? homepage.unfoldingSigns : groupSignsByStatus(content.signs, "unfolding");
+const approachingSigns = homepage.approachingSigns.length ? homepage.approachingSigns : groupSignsByStatus(content.signs, "approaching");
+const fulfilledGroups = groupBy(fulfilledSigns, (sign) => sign.period);
+const unfoldingGroups = groupBy(unfoldingSigns, (sign) => sign.category);
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "The Final Hour",
+    url: new URL("/", siteUrl).toString(),
+    description: "An educational journey through Islamic prophecies and signs of the Hour.",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${new URL("/search/", siteUrl).toString()}?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Signs of the End Times in Islam",
+    about: { "@type": "Thing", name: "Islamic Eschatology" },
+  },
+];
+---
+
+<BaseLayout jsonLd={jsonLd}>
+  <main class="relative">
+    <AnnouncementBar banners={homepage.banners || []} />
+    <HeroSection />
+
+    <section class="px-6 py-12">
+      <div class="mx-auto max-w-2xl rounded-lg border border-border/50 bg-card/60 px-6 py-5 backdrop-blur-sm">
+        <p class="text-center text-sm leading-relaxed text-muted-foreground">
+          Only Allah knows the unseen (33:63). This is an educational compilation of traditional Islamic texts and scholarly works. No date predictions are made.
+        </p>
+      </div>
+    </section>
+
+    <div class="mx-auto max-w-4xl px-4 lg:px-8">
+      <section id="foundation" class="py-16">
+        <h2 class="gold-text mb-4 text-center font-heading text-3xl font-light tracking-wide md:text-4xl">
+          What is Islamic Eschatology?
+        </h2>
+        <p class="mx-auto mb-12 max-w-2xl text-center leading-relaxed text-muted-foreground">
+          <span class="font-arabic text-primary/80">علم الآخرة</span> is the knowledge of the Hereafter. The Prophet Muhammad (peace be upon him) described signs that would precede the Day of Judgment, categorized by scholars into levels of severity.
+        </p>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <article class="rounded-lg border border-fulfilled/30 bg-card/60 p-5">
+            <h3 class="mb-1 font-heading text-lg font-semibold text-fulfilled">Minor Signs</h3>
+            <p class="mb-3 text-xs text-muted-foreground/70">Ashrat al-Sughra</p>
+            <p class="text-sm leading-relaxed text-muted-foreground">Everyday societal trends and historical events spanning centuries, many already fulfilled.</p>
+          </article>
+          <article class="rounded-lg border border-unfolding/30 bg-card/60 p-5">
+            <h3 class="mb-1 font-heading text-lg font-semibold text-unfolding">Middle Signs</h3>
+            <p class="mb-3 text-xs text-muted-foreground/70">Ashrat al-Wusta</p>
+            <p class="text-sm leading-relaxed text-muted-foreground">Transitional events bridging minor and major signs, increasing in intensity.</p>
+          </article>
+          <article class="rounded-lg border border-approaching/30 bg-card/60 p-5">
+            <h3 class="mb-1 font-heading text-lg font-semibold text-approaching">Major Signs</h3>
+            <p class="mb-3 text-xs text-muted-foreground/70">Ashrat al-Kubra</p>
+            <p class="text-sm leading-relaxed text-muted-foreground">Final cataclysmic events; once the first occurs, the rest follow rapidly.</p>
+          </article>
+        </div>
+      </section>
+
+      <SectionDivider label="Signs Fulfilled" />
+      <section id="fulfilled" class="py-12">
+        <div class="mb-8">
+          <h2 class="font-heading text-2xl font-semibold tracking-wide text-foreground md:text-3xl">Signs That Came True</h2>
+          <p class="mt-2 text-sm text-muted-foreground">{fulfilledSigns.length} prophecies fulfilled throughout Islamic history</p>
+        </div>
+        <div class="space-y-8">
+          {Object.entries(fulfilledGroups).slice(0, 4).map(([period, signs]) => (
+            <div>
+              <h3 class="mb-3 font-heading text-xl text-primary">{period}</h3>
+              <div class="space-y-2">{signs.slice(0, 4).map((sign) => <SignCard sign={sign} compact />)}</div>
+            </div>
+          ))}
+        </div>
+        <a href="/signs/fulfilled/" class="mt-6 inline-flex text-sm text-primary/80 hover:text-primary">View all fulfilled signs</a>
+      </section>
+
+      <SectionDivider label="Signs Unfolding" />
+      <section id="unfolding" class="py-12">
+        <div class="mb-8">
+          <h2 class="font-heading text-2xl font-semibold tracking-wide text-foreground md:text-3xl">Signs Unfolding Now</h2>
+          <p class="mt-2 text-sm text-muted-foreground">{unfoldingSigns.length} signs manifesting in the current era</p>
+        </div>
+        <div class="space-y-8">
+          {Object.entries(unfoldingGroups).slice(0, 3).map(([category, signs]) => (
+            <div>
+              <h3 class="mb-3 font-heading text-xl text-primary">{category}</h3>
+              <div class="grid gap-2 md:grid-cols-2">{signs.slice(0, 4).map((sign) => <SignCard sign={sign} compact />)}</div>
+            </div>
+          ))}
+        </div>
+        <a href="/signs/unfolding/" class="mt-6 inline-flex text-sm text-primary/80 hover:text-primary">View all unfolding signs</a>
+      </section>
+
+      {approachingSigns.length > 0 ? (
+        <>
+          <SectionDivider label="Signs Approaching" />
+          <section id="approaching" class="py-12">
+            <h2 class="mb-6 font-heading text-2xl font-semibold tracking-wide text-foreground md:text-3xl">Signs Approaching</h2>
+            <div class="grid gap-2 md:grid-cols-2">{approachingSigns.slice(0, 6).map((sign) => <SignCard sign={sign} compact />)}</div>
+            <a href="/signs/approaching/" class="mt-6 inline-flex text-sm text-primary/80 hover:text-primary">View all approaching signs</a>
+          </section>
+        </>
+      ) : null}
+
+      <SectionDivider label="The Major Signs" />
+      <section id="major-signs" class="py-12">
+        <h2 class="mb-2 font-heading text-2xl font-semibold tracking-wide text-foreground md:text-3xl">The Major Signs</h2>
+        <p class="mb-8 text-sm text-muted-foreground">The major events before the Day of Judgment, presented with scholarly caution.</p>
+        <div class="space-y-4">{homepage.majorSigns.slice(0, 10).map((sign) => <MajorSignCard sign={sign} compact />)}</div>
+        <a href="/major-signs/" class="mt-6 inline-flex text-sm text-primary/80 hover:text-primary">View major signs page</a>
+      </section>
+
+      <SectionDivider label="Modern Interpretations" />
+      <section id="interpretations" class="py-12">
+        <h2 class="mb-6 font-heading text-2xl font-semibold tracking-wide text-foreground md:text-3xl">Modern Interpretations</h2>
+        <div class="grid gap-4 md:grid-cols-2">
+          {homepage.interpretations.map((item) => (
+            <article class="rounded-lg border border-border/50 bg-card/60 p-5">
+              <h3 class="font-heading text-lg font-semibold text-foreground">{item.prophecy}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{item.modernInterpretation}</p>
+              <p class="mt-3 border-t border-border/30 pt-3 text-sm leading-relaxed text-foreground/80">{item.scholarlyCaution}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+
+    <SectionDivider />
+    <section class="px-6 py-16 md:py-24">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="gold-text font-heading text-5xl leading-none md:text-6xl">&ldquo;</span>
+        <blockquote class="mt-6 font-heading text-xl font-light italic leading-relaxed tracking-wide text-foreground/90 md:text-2xl lg:text-3xl">
+          {homepage.featuredVerse?.text || "Are they only waiting for the Hour to take them by surprise? Yet some of its signs have already come..."}
+        </blockquote>
+        <span class="gold-text mt-6 block font-heading text-5xl leading-none md:text-6xl">&rdquo;</span>
+        <div class="mx-auto mt-6 h-px w-16 bg-primary/40"></div>
+        <p class="mt-4 text-sm tracking-widest text-primary/60">&mdash; {homepage.featuredVerse?.reference || "Surah Muhammad, 47:18"}</p>
+      </div>
+    </section>
+    <SectionDivider />
+    <section class="mx-auto max-w-5xl px-4 py-16 lg:px-8">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <a href="/timeline/" class="group rounded-lg border border-border/50 bg-card/60 p-6 transition-all duration-300 hover:border-primary/30 hover:bg-card">
+          <h3 class="mb-1 font-heading text-lg font-semibold text-foreground">The Sequence</h3>
+          <p class="text-sm text-muted-foreground">Explore the prophesied timeline from past to future.</p>
+        </a>
+        <a href="/glossary/" class="group rounded-lg border border-border/50 bg-card/60 p-6 transition-all duration-300 hover:border-primary/30 hover:bg-card">
+          <h3 class="mb-1 font-heading text-lg font-semibold text-foreground">Glossary & References</h3>
+          <p class="text-sm text-muted-foreground">Key terms, Quranic verses, and scholarly works.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

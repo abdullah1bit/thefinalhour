@@ -1,0 +1,28 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import PageHeader from "@/components/astro/PageHeader.astro";
+import TimelineCard from "@/components/astro/TimelineCard.astro";
+import { getPublicContent, pageDescription } from "@/lib/public-content";
+
+export async function getStaticPaths() {
+  const content = await getPublicContent();
+  return content.timeline.map((event, index) => ({
+    params: { slug: event.slug },
+    props: { event, index },
+  }));
+}
+
+const { event, index } = Astro.props;
+const description = pageDescription(event.description);
+---
+
+<BaseLayout title={event.title} description={description} path={`/timeline/${event.slug}/`}>
+  <main>
+    <Breadcrumbs items={[{ href: "/", label: "Home" }, { href: "/timeline/", label: "Timeline" }, { href: `/timeline/${event.slug}/`, label: event.title }]} />
+    <PageHeader title={event.title} subtitle={description} status={event.status} />
+    <section class="mx-auto max-w-3xl px-4 py-12 lg:px-8 lg:py-16">
+      <TimelineCard event={event} index={index} />
+    </section>
+  </main>
+</BaseLayout>

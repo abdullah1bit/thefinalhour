@@ -1,0 +1,36 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import PageHeader from "@/components/astro/PageHeader.astro";
+import SignCard from "@/components/astro/SignCard.astro";
+import { getPublicContent, pageDescription } from "@/lib/public-content";
+
+export async function getStaticPaths() {
+  const content = await getPublicContent();
+  return content.signs.map((sign) => ({
+    params: { slug: sign.slug },
+    props: { sign },
+  }));
+}
+
+const { sign } = Astro.props;
+const description = pageDescription(sign.description);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: sign.title,
+  description,
+  about: "Islamic eschatology",
+};
+const statusLabel = sign.status.charAt(0).toUpperCase() + sign.status.slice(1);
+---
+
+<BaseLayout title={sign.title} description={description} path={`/signs/${sign.slug}/`} jsonLd={jsonLd}>
+  <main>
+    <Breadcrumbs items={[{ href: "/", label: "Home" }, { href: "/signs/", label: "Signs" }, { href: `/signs/${sign.status}/`, label: `${statusLabel} Signs` }, { href: `/signs/${sign.slug}/`, label: sign.title }]} />
+    <PageHeader title={sign.title} subtitle={description} status={sign.status} />
+    <section class="mx-auto max-w-3xl px-4 py-12 lg:px-8 lg:py-16">
+      <SignCard sign={sign} />
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,34 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import PageHeader from "@/components/astro/PageHeader.astro";
+import GlossaryTermCard from "@/components/astro/GlossaryTermCard.astro";
+import { getPublicContent, glossarySlug, pageDescription } from "@/lib/public-content";
+
+export async function getStaticPaths() {
+  const content = await getPublicContent();
+  return content.glossary.map((term) => ({
+    params: { slug: glossarySlug(term) },
+    props: { term },
+  }));
+}
+
+const { term } = Astro.props;
+const description = pageDescription(term.definition);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "DefinedTerm",
+  name: term.term,
+  description: term.definition,
+};
+---
+
+<BaseLayout title={term.term} description={description} path={`/glossary/${glossarySlug(term)}/`} jsonLd={jsonLd}>
+  <main>
+    <Breadcrumbs items={[{ href: "/", label: "Home" }, { href: "/glossary/", label: "Glossary" }, { href: `/glossary/${glossarySlug(term)}/`, label: term.term }]} />
+    <PageHeader title={term.term} subtitle={description} />
+    <section class="mx-auto max-w-3xl px-4 py-12 lg:px-8 lg:py-16">
+      <GlossaryTermCard term={term} />
+    </section>
+  </main>
+</BaseLayout>
