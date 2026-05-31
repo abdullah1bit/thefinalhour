@@ -36,7 +36,7 @@ A production-ready informational website presenting Islamic eschatology in a res
 - **Data Fetching**: TanStack React Query
 - **Icons**: lucide-react
 - **Backend**: Hono + Bun (port 3000)
-- **Database**: SQLite via Prisma ORM
+- **Database**: PostgreSQL via Prisma ORM
 - **Auth**: Better Auth (email/password, admin roles)
 
 ## Features
@@ -148,8 +148,7 @@ backend/
 
 ## Admin Credentials
 
-- Email: `admin@thefinalhour.com`
-- Password: `admin123` (change immediately in production)
+Admin accounts should be created with private environment variables during setup. Do not commit real admin emails or passwords.
 
 ## Content Guidelines
 

@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+coverage/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Internal agent/editor/project notes
+.agents/
+.claude/
+.skills/
+.content/
+AGENTS.md
+CLAUDE.md
+**/AGENTS.md
+**/CLAUDE.md
+How to Maintain.md
+How to Setup.md
+changelog.txt
+changelog.md
+post-launch-report.md
+railway.json
+
+# Databases and generated Prisma files
+*.db
+*.db-journal
+backend/prisma/dev.db
+backend/prisma/*.db
+backend/generated/
+backend/generated/prisma/
+
+# Logs and local reports
+*.log
+logs/
+server.log
+studio.log
+report.*.json
+.vade-report
+webapp/.vade-report
+
+# Uploaded/runtime files
+backend/uploads/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
