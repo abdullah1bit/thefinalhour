@@ -1,39 +1,37 @@
 # The Final Hour
 
-The Final Hour is an educational website that presents Islamic eschatology in a clear, sequential format for general readers.
+The Final Hour is an educational website about Islamic eschatology for everyday readers.
 
-The project gathers signs of the Hour, major events, glossary terms, Qur'anic verses, scholarly works, and interpretive notes into one browsable experience. The goal is not to issue predictions or replace scholarship. It is to make sourced material easier to explore, compare, and keep updated as better references, lectures, and scholarly explanations are added.
+The idea is simple: the signs of the Hour are discussed in many places, but they are often hard to follow in order. This site brings the material into one browsable timeline with sources, glossary terms, Qur'anic references, scholarly works, and notes on different interpretations.
 
-## Why This Exists
+It does not predict dates. It does not replace scholars. It tries to make the subject easier to study without turning it into sensational content.
 
-Most information about Islamic end-times material is scattered across books, lectures, articles, and informal posts. This project aims to organize that material into an accessible public resource:
+## What is included
 
-- Sequential presentation of fulfilled, unfolding, and major signs
-- Source links for deeper reading
-- Admin tools for maintaining content without editing code
-- A glossary and references section for general readers
-- A foundation for adding stronger scholarly review over time
+- Fulfilled, unfolding, and major signs arranged in sequence
+- Source links for further reading
+- Glossary entries for important terms
+- Qur'anic verses and scholarly references
+- Notes where scholars or interpreters differ
 
-## Project Structure
+## For developers
 
 ```
 webapp/   React + Vite frontend and admin panel
 backend/  Hono + Bun API, Prisma models, Better Auth
 ```
 
-The frontend uses relative `/api/...` URLs in production so it can work behind common reverse proxies and deployment platforms.
+## A few guardrails
 
-## Safety And Scholarly Notes
+- No date predictions.
+- Keep the tone sober and sourced.
+- Present differing scholarly views clearly when they exist.
+- Keep the reminder that only Allah knows the unseen.
+- Treat the site as an educational resource, not a source of formal religious verdicts.
 
-- No date predictions should be added.
-- Content should stay sober, sourced, and non-sensational.
-- Where scholars differ, multiple views should be represented clearly.
-- "Only Allah knows the unseen" should remain the guiding disclaimer.
-- This project is for public education, not formal religious verdicts.
+## Run it locally
 
-## Local Setup
-
-Copy the example environment files and fill in private values locally:
+Copy the example environment files and fill in private values on your machine:
 
 ```bash
 cp backend/.env.example backend/.env
