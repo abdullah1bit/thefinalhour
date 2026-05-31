@@ -1,0 +1,76 @@
+---
+import type { MajorSign } from "@/lib/types";
+import { imageUrl } from "@/lib/public-content";
+
+interface Props {
+  sign: MajorSign;
+  compact?: boolean;
+}
+
+const { sign, compact = false } = Astro.props;
+let imgSettings: { objectFit?: string; objectPosition?: string; size?: string } | null = null;
+try {
+  imgSettings = sign.imageSettings ? JSON.parse(sign.imageSettings) : null;
+} catch {
+  imgSettings = null;
+}
+const img = imageUrl(sign.imageUrl);
+const height = imgSettings?.size === "sm" ? "120px" : imgSettings?.size === "lg" ? "260px" : "180px";
+---
+
+<article class="group relative overflow-hidden rounded-lg border border-border/50 bg-card transition-colors duration-300 hover:border-approaching/30">
+  <div class="absolute inset-x-0 top-0 h-0.5 bg-approaching/40"></div>
+  <details open={!compact}>
+    <summary class="flex cursor-pointer list-none items-start gap-4 p-5 md:p-6">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-approaching/40 bg-approaching/10 md:h-12 md:w-12">
+        <span class="font-heading text-lg font-bold text-approaching md:text-xl">{sign.number}</span>
+      </div>
+      <div class="min-w-0 flex-1">
+        <h2 class="font-heading text-xl font-bold leading-tight tracking-wide text-foreground md:text-2xl">
+          <a href={`/major-signs/${sign.slug}/`} class="hover:text-primary">{sign.title}</a>
+        </h2>
+        <p class="font-arabic text-base text-approaching/80 md:text-lg">{sign.arabicTitle}</p>
+        <p class="text-sm font-medium text-muted-foreground">{sign.subtitle}</p>
+        <p class="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">{sign.description}</p>
+      </div>
+      <span class="text-muted-foreground">v</span>
+    </summary>
+    <div class="border-t border-border/40 px-5 pb-5 pt-4 md:px-6 md:pb-6">
+      {img ? (
+        <div class="mb-4 w-full overflow-hidden rounded-md" style={`height: ${height}`}>
+          <img
+            src={img}
+            alt={sign.title}
+            loading="lazy"
+            class="h-full w-full"
+            style={`object-fit: ${imgSettings?.objectFit || "cover"}; object-position: ${imgSettings?.objectPosition || "center"};`}
+          />
+        </div>
+      ) : null}
+      <div class="space-y-4">
+        {sign.details.map((detail) => (
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-approaching/70">{detail.label}</h3>
+            <p class="mt-1 text-sm leading-relaxed text-foreground/80">{detail.content}</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-6 border-t border-border/30 pt-4">
+        <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Sources</p>
+        <div class="mt-2 flex flex-wrap gap-2">
+          {sign.sources.map((source) => (
+            <span class="rounded-md border border-border/50 bg-secondary/50 px-2.5 py-1 text-xs text-muted-foreground">{source}</span>
+          ))}
+        </div>
+        <div class="mt-3 flex flex-wrap gap-3">
+          <a href={`/major-signs/${sign.slug}/`} class="text-sm text-primary/80 hover:text-primary">View detail page</a>
+          {sign.sourceUrl ? (
+            <a href={sign.sourceUrl} target="_blank" rel="noopener noreferrer" class="text-sm text-primary/80 hover:text-primary">
+              {sign.sourceLabel || "Read source"}
+            </a>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  </details>
+</article>

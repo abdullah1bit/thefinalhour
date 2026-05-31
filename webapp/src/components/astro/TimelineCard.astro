@@ -1,0 +1,54 @@
+---
+import type { TimelineEvent } from "@/lib/types";
+import { imageUrl } from "@/lib/public-content";
+import StatusBadge from "./StatusBadge.astro";
+
+interface Props {
+  event: TimelineEvent;
+  index: number;
+  alignment?: "left" | "right";
+}
+
+const { event, index, alignment = "left" } = Astro.props;
+let imgSettings: { objectFit?: string; objectPosition?: string; size?: string } | null = null;
+try {
+  imgSettings = event.imageSettings ? JSON.parse(event.imageSettings) : null;
+} catch {
+  imgSettings = null;
+}
+const img = imageUrl(event.imageUrl);
+const height = imgSettings?.size === "sm" ? "100px" : imgSettings?.size === "lg" ? "200px" : "140px";
+---
+
+<article class={`group relative w-full max-w-sm overflow-hidden rounded-lg border border-border/60 bg-card/80 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:bg-card ${alignment === "right" ? "md:text-right" : "md:text-left"}`}>
+  {img ? (
+    <div class="w-full overflow-hidden" style={`height: ${height}`}>
+      <img
+        src={img}
+        alt={event.title}
+        loading="lazy"
+        class="h-full w-full"
+        style={`object-fit: ${imgSettings?.objectFit || "cover"}; object-position: ${imgSettings?.objectPosition || "center"};`}
+      />
+    </div>
+  ) : null}
+  <div class="p-4">
+    <div class={`mb-2 flex items-center gap-2 ${alignment === "right" ? "md:flex-row-reverse" : ""}`}>
+      <span class="font-body text-xs tabular-nums text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+      <StatusBadge status={event.status} />
+    </div>
+    <h2 class="font-heading text-lg font-semibold leading-tight text-foreground">
+      <a href={`/timeline/${event.slug}/`} class="hover:text-primary">{event.title}</a>
+    </h2>
+    <p class="mt-1.5 font-body text-sm leading-relaxed text-muted-foreground">{event.description}</p>
+    <div class="mt-3 flex flex-wrap gap-3">
+      <a href={`/timeline/${event.slug}/`} class="text-xs text-primary/80 transition-colors hover:text-primary">View detail page</a>
+      {event.sourceUrl ? (
+        <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer" class="text-xs text-primary/80 transition-colors hover:text-primary">
+          {event.sourceLabel || "Read source"}
+        </a>
+      ) : null}
+    </div>
+  </div>
+  <div class={`absolute bottom-0 h-0.5 w-12 rounded-full bg-primary/40 ${alignment === "right" ? "md:right-4" : "left-4"}`}></div>
+</article>

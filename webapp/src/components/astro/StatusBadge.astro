@@ -1,0 +1,24 @@
+---
+import type { SignStatus } from "@/lib/types";
+
+interface Props {
+  status: SignStatus | string | null;
+}
+
+const { status } = Astro.props;
+const labels: Record<string, string> = {
+  fulfilled: "Fulfilled",
+  unfolding: "Unfolding",
+  approaching: "Approaching",
+};
+const classes: Record<string, string> = {
+  fulfilled: "border-fulfilled/40 bg-fulfilled/10 text-fulfilled",
+  unfolding: "border-unfolding/40 bg-unfolding/10 text-unfolding",
+  approaching: "border-approaching/40 bg-approaching/10 text-approaching",
+};
+const key = status || "fulfilled";
+---
+
+<span class={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${classes[key] || classes.fulfilled}`}>
+  {labels[key] || key}
+</span>

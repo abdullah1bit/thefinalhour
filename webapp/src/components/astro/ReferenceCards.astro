@@ -1,0 +1,50 @@
+---
+import type { QuranicVerse, ScholarlyWork } from "@/lib/types";
+
+interface Props {
+  verses?: QuranicVerse[];
+  works?: ScholarlyWork[];
+}
+
+const { verses = [], works = [] } = Astro.props;
+---
+
+{verses.length > 0 ? (
+  <section id="quranic-verses">
+    <h2 class="gold-text mb-6 font-heading text-2xl font-bold">Quranic Verses</h2>
+    <div class="grid gap-4 md:grid-cols-2">
+      {verses.map((verse) => (
+        <article id={`verse-${verse.id}`} class="rounded-lg border border-border/50 bg-card/60 p-5">
+          <h3 class="font-heading text-lg font-semibold text-primary">{verse.reference}</h3>
+          <blockquote class="mt-3 text-sm leading-relaxed text-foreground/90">{verse.text}</blockquote>
+          {verse.context ? <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{verse.context}</p> : null}
+          {verse.sourceUrl ? (
+            <a href={verse.sourceUrl} target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex text-xs text-primary/80 hover:text-primary">
+              {verse.sourceLabel || "Read source"}
+            </a>
+          ) : null}
+        </article>
+      ))}
+    </div>
+  </section>
+) : null}
+
+{works.length > 0 ? (
+  <section id="scholarly-works" class="mt-16">
+    <h2 class="gold-text mb-6 font-heading text-2xl font-bold">Scholarly Works</h2>
+    <div class="grid gap-4 sm:grid-cols-3">
+      {works.map((work) => (
+        <article id={`work-${work.id}`} class="rounded-lg border border-border/50 bg-card/60 p-5">
+          <h3 class="font-heading text-lg font-semibold text-foreground">{work.title}</h3>
+          <p class="mt-2 text-sm text-muted-foreground">{work.author}</p>
+          <p class="mt-1 text-xs text-muted-foreground/70">{work.deathDate}</p>
+          {work.sourceUrl ? (
+            <a href={work.sourceUrl} target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex text-xs text-primary/80 hover:text-primary">
+              {work.sourceLabel || "Read source"}
+            </a>
+          ) : null}
+        </article>
+      ))}
+    </div>
+  </section>
+) : null}

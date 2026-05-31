@@ -1,0 +1,17 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/astro/PageHeader.astro";
+import MajorSignCard from "@/components/astro/MajorSignCard.astro";
+import { getPublicContent } from "@/lib/public-content";
+
+const { majorSigns } = await getPublicContent();
+---
+
+<BaseLayout title="Major Signs" description="The major signs of the Final Hour in Islam, presented with details and source references." path="/major-signs/">
+  <main>
+    <PageHeader title="The Major Signs" subtitle="The major events before the Day of Judgment, presented with scholarly caution and source references." />
+    <section class="mx-auto max-w-5xl px-4 py-12 lg:px-8 lg:py-16">
+      <div class="space-y-4">{majorSigns.map((sign) => <MajorSignCard sign={sign} compact />)}</div>
+    </section>
+  </main>
+</BaseLayout>

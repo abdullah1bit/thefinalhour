@@ -1,0 +1,17 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/astro/PageHeader.astro";
+import ReferenceCards from "@/components/astro/ReferenceCards.astro";
+import { getPublicContent } from "@/lib/public-content";
+
+const { verses, scholarlyWorks } = await getPublicContent();
+---
+
+<BaseLayout title="References" description="Quranic verses and scholarly works referenced by The Final Hour." path="/references/">
+  <main>
+    <PageHeader title="References" subtitle="Quranic verses and scholarly works used throughout the public educational site." />
+    <section class="mx-auto max-w-5xl px-4 py-12 lg:px-8 lg:py-16">
+      <ReferenceCards verses={verses} works={scholarlyWorks} />
+    </section>
+  </main>
+</BaseLayout>

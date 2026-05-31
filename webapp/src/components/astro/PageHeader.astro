@@ -1,0 +1,26 @@
+---
+import StatusBadge from "./StatusBadge.astro";
+import type { SignStatus } from "@/lib/types";
+
+interface Props {
+  title: string;
+  subtitle: string;
+  status?: SignStatus;
+}
+
+const { title, subtitle, status } = Astro.props;
+---
+
+<section class="relative overflow-hidden border-b border-border/50 py-16 md:py-24">
+  <div class="pointer-events-none absolute inset-0 star-pattern"></div>
+  <div class="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl"></div>
+  <div class="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
+    {status ? <div class="mb-6 flex justify-center"><StatusBadge status={status} /></div> : null}
+    <h1 class="gold-text font-heading text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl">
+      {title}
+    </h1>
+    <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+      {subtitle}
+    </p>
+  </div>
+</section>

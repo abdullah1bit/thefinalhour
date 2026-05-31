@@ -1,0 +1,35 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import PageHeader from "@/components/astro/PageHeader.astro";
+import MajorSignCard from "@/components/astro/MajorSignCard.astro";
+import { getPublicContent, pageDescription } from "@/lib/public-content";
+
+export async function getStaticPaths() {
+  const content = await getPublicContent();
+  return content.majorSigns.map((sign) => ({
+    params: { slug: sign.slug },
+    props: { sign },
+  }));
+}
+
+const { sign } = Astro.props;
+const description = pageDescription(sign.description);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: sign.title,
+  description,
+  about: "Major signs of the Final Hour in Islam",
+};
+---
+
+<BaseLayout title={sign.title} description={description} path={`/major-signs/${sign.slug}/`} jsonLd={jsonLd}>
+  <main>
+    <Breadcrumbs items={[{ href: "/", label: "Home" }, { href: "/major-signs/", label: "Major Signs" }, { href: `/major-signs/${sign.slug}/`, label: sign.title }]} />
+    <PageHeader title={sign.title} subtitle={sign.subtitle} />
+    <section class="mx-auto max-w-3xl px-4 py-12 lg:px-8 lg:py-16">
+      <MajorSignCard sign={sign} />
+    </section>
+  </main>
+</BaseLayout>

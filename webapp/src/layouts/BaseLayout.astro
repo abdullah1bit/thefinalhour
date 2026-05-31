@@ -1,0 +1,129 @@
+---
+import "../index.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const defaultTitle = "The Final Hour | Signs of the End Times in Islam";
+const defaultDescription =
+  "Explore the signs of the end times in Islam, what has come true, what is unfolding, and what is yet to come. Based on traditional Islamic sources.";
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://thefinalhour.vercel.app";
+const {
+  title,
+  description = defaultDescription,
+  path = "/",
+  image = "/og-base.png",
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+const currentTitle = title ? `${title} | The Final Hour` : defaultTitle;
+const canonicalUrl = new URL(path, siteUrl).toString();
+const pathname = Astro.url.pathname;
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/signs/", label: "Signs" },
+  { href: "/major-signs/", label: "Major Signs" },
+  { href: "/timeline/", label: "The Sequence" },
+  { href: "/glossary/", label: "Glossary" },
+  { href: "/references/", label: "References" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{currentTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="The Final Hour" />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href="/site-icon.png" />
+
+    <meta property="og:title" content={currentTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL(image, siteUrl).toString()} />
+    <meta property="og:site_name" content="The Final Hour" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={currentTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, siteUrl).toString()} />
+    <meta name="theme-color" content="#0a0f0a" />
+
+    {jsonLd ? (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    ) : null}
+  </head>
+  <body>
+    <header class="sticky top-0 z-50 w-full border-b border-border/50 bg-background/85 backdrop-blur-md">
+      <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-4 lg:px-8" aria-label="Main navigation">
+        <a href="/" class="gold-text flex-shrink-0 font-heading text-xl font-semibold tracking-wide md:text-2xl">
+          The Final Hour
+        </a>
+        <div class="hidden items-center gap-1 lg:flex">
+          {navLinks.map((link) => {
+            const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            return (
+              <a
+                href={link.href}
+                class:list={[
+                  "relative px-3 py-2 text-sm font-body transition-colors duration-200",
+                  active ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                ]}
+              >
+                {link.label}
+                {active ? <span class="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-primary" /> : null}
+              </a>
+            );
+          })}
+          <a href="/search/" class="ml-2 inline-flex items-center gap-2 rounded-md border border-border/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+            Search
+          </a>
+        </div>
+        <details class="group lg:hidden">
+          <summary class="flex min-h-[44px] cursor-pointer list-none items-center rounded-md px-3 text-sm text-foreground">
+            Menu
+          </summary>
+          <div class="absolute left-0 right-0 top-16 border-b border-border/50 bg-background/95 px-4 py-4 backdrop-blur-md">
+            <div class="mx-auto flex max-w-7xl flex-col gap-1">
+              {navLinks.map((link) => (
+                <a href={link.href} class="rounded-md px-4 py-3 text-sm font-body text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+                  {link.label}
+                </a>
+              ))}
+              <a href="/search/" class="rounded-md px-4 py-3 text-sm font-body text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+                Search
+              </a>
+            </div>
+          </div>
+        </details>
+      </nav>
+    </header>
+    <slot />
+    <footer class="border-t border-border/50 px-6 py-12">
+      <div class="mx-auto flex max-w-5xl flex-col gap-6 text-center md:flex-row md:items-center md:justify-between md:text-left">
+        <div>
+          <p class="gold-text font-heading text-xl font-semibold">The Final Hour</p>
+          <p class="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+            An educational compilation on Islamic eschatology, grounded in traditional sources and scholarly caution.
+          </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground md:justify-end">
+          <a class="hover:text-primary" href="/timeline/">Timeline</a>
+          <a class="hover:text-primary" href="/glossary/">Glossary</a>
+          <a class="hover:text-primary" href="/references/">References</a>
+          <a class="hover:text-primary" href="/admin/login">Admin</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

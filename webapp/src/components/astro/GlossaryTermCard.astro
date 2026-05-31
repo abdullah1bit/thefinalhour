@@ -1,0 +1,26 @@
+---
+import type { GlossaryTerm } from "@/lib/types";
+import { glossarySlug } from "@/lib/public-content";
+
+interface Props {
+  term: GlossaryTerm;
+}
+
+const { term } = Astro.props;
+---
+
+<article class="rounded-lg border border-border/50 bg-card/60 p-4 transition-colors hover:border-primary/30 hover:bg-card">
+  <h2 class="font-heading text-lg font-semibold text-foreground">
+    <a href={`/glossary/${glossarySlug(term)}/`} class="hover:text-primary">{term.term}</a>
+  </h2>
+  {term.arabic ? <p class="mt-1 font-arabic text-base text-primary/70" dir="rtl">{term.arabic}</p> : null}
+  <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{term.definition}</p>
+  <div class="mt-3 flex flex-wrap gap-3">
+    <a href={`/glossary/${glossarySlug(term)}/`} class="text-xs text-primary/80 hover:text-primary">View term page</a>
+    {term.sourceUrl ? (
+      <a href={term.sourceUrl} target="_blank" rel="noopener noreferrer" class="text-xs text-primary/80 hover:text-primary">
+        {term.sourceLabel || "Read source"}
+      </a>
+    ) : null}
+  </div>
+</article>
