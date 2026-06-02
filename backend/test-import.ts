@@ -1,18 +1,32 @@
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 
-// Connect directly to the production Neon Database
+function requireEnv(name: string): string {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`${name} is required.`);
+    }
+    return value;
+}
+
+const databaseUrl = requireEnv("DATABASE_URL");
+const backupJsonPath = process.argv[2] || process.env.BACKUP_JSON_PATH;
+
+if (!backupJsonPath) {
+    throw new Error("Provide a backup JSON path as the first argument or set BACKUP_JSON_PATH.");
+}
+
 const prisma = new PrismaClient({
     datasources: {
         db: {
-            url: "postgresql://neondb_owner:npg_EUq7fpoLnbG3@ep-lingering-credit-a1aacwj9-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+            url: databaseUrl,
         }
     }
 });
 
 async function testImport() {
     console.log("Reading backup JSON...");
-    const data = fs.readFileSync("c:/Users/GNG/Downloads/thefinalhour-backup-2026-02-27.json", "utf-8");
+    const data = fs.readFileSync(backupJsonPath, "utf-8");
     const parsed = JSON.parse(data);
     const results: Record<string, number> = {};
 
