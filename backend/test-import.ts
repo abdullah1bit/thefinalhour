@@ -26,7 +26,7 @@ const prisma = new PrismaClient({
 
 async function testImport() {
     console.log("Reading backup JSON...");
-    const data = fs.readFileSync(backupJsonPath, "utf-8");
+    const data = fs.readFileSync(backupJsonPath as string, "utf-8");
     const parsed = JSON.parse(data);
     const results: Record<string, number> = {};
 

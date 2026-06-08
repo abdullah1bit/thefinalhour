@@ -466,6 +466,10 @@ async function main() {
     { term: "Al-Nar", arabic: "\u0627\u0644\u0646\u0627\u0631", definition: "The Fire from Yemen that drives people to the gathering", sortOrder: 9 },
     { term: "Nafkhat al-Sur", arabic: "\u0646\u0641\u062e\u0629 \u0627\u0644\u0635\u0648\u0631", definition: "The blowing of the Trumpet signaling the end", sortOrder: 10 },
     { term: "Ilm al-Akhira", arabic: "\u0639\u0644\u0645 \u0627\u0644\u0622\u062e\u0631\u0629", definition: "The knowledge of the Hereafter / eschatology", sortOrder: 11 },
+    { term: "Al-Harj", arabic: "\u0627\u0644\u0647\u0631\u062c", definition: "Widespread killing and bloodshed where the killer doesn't know why he killed and the killed doesn't know why he was killed", sortOrder: 12 },
+    { term: "Al-Khusuf", arabic: "\u0627\u0644\u062e\u0633\u0648\u0641", definition: "The swallowing of the earth / landslides, specifically the three major ones to occur before the Hour", sortOrder: 13 },
+    { term: "Al-Rum", arabic: "\u0627\u0644\u0631\u0648\u0645", definition: "Historically the Romans/Byzantines; eschatologically interpreted by many as Western civilization or people of European descent", sortOrder: 14 },
+
   ];
 
   for (const term of glossaryTerms) {
@@ -481,6 +485,9 @@ async function main() {
     { reference: "54:1", text: "The Hour has drawn near and the moon was split.", context: "The splitting of the moon as a sign", sortOrder: 3 },
     { reference: "44:10-11", text: "Then watch for the Day when the sky will bring a visible smoke, covering the people; this is a painful torment.", context: "The great smoke that will cover the earth", sortOrder: 4 },
     { reference: "27:82", text: "And when the Word is fulfilled against them, We will produce for them a creature from the earth, speaking to them that the people were not certain of Our signs.", context: "The emergence of the Beast", sortOrder: 5 },
+    { reference: "21:96-97", text: "Until when [the dam of] Gog and Magog has been opened and they, from every elevation, descend. And [when] the true promise has approached...", context: "The release of Gog and Magog", sortOrder: 6 },
+    { reference: "41:53", text: "We will show them Our signs in the horizons and within themselves until it becomes clear to them that it is the truth.", context: "The continuous manifestation of signs", sortOrder: 7 },
+
   ];
 
   for (const verse of verses) {
@@ -493,6 +500,11 @@ async function main() {
     { title: "Al-Tadhkira fi Ahwal al-Mawta wa Umur al-Akhira", author: "Imam al-Qurtubi", deathDate: "d. 671 AH", sortOrder: 0 },
     { title: "Al-Nihaya fil-Fitan wal-Malahim", author: "Imam Ibn Kathir", deathDate: "d. 774 AH", sortOrder: 1 },
     { title: "Al-Isha'a li Ashrat al-Sa'a", author: "Imam al-Barzanji", deathDate: "d. 1103 AH", sortOrder: 2 },
+    { title: "Kitab al-Fitan", author: "Nu'aym ibn Hammad", deathDate: "d. 228 AH", sortOrder: 3 },
+    { title: "Al-Kashf 'an Mujawazat Hadhihi al-Ummah al-Alf", author: "Jalal al-Din al-Suyuti", deathDate: "d. 911 AH", sortOrder: 4 },
+    { title: "Fath al-Bari (Commentary on Sahih Bukhari, Book of Fitan)", author: "Ibn Hajar al-Asqalani", deathDate: "d. 852 AH", sortOrder: 5 },
+    { title: "Jerusalem in the Qur'an", author: "Sheikh Imran N. Hosein", deathDate: "Contemporary", sourceUrl: "https://imranhosein.org/", sourceLabel: "Website", sortOrder: 6 },
+
   ];
 
   for (const work of scholarlyWorks) {
@@ -553,6 +565,31 @@ async function main() {
       scholarlyCaution: "The Prophet (SAW) clarified that knowledge is not taken by being snatched from hearts, but by the death of scholars \u2014 until only ignorant leaders remain who give rulings without knowledge.",
       sortOrder: 4,
     },
+    {
+      prophecy: "The Euphrates will uncover a mountain of gold",
+      modernInterpretation: "The shrinking of the Euphrates river is currently unfolding due to dams and climate change. Some observers look toward the eventual uncovering of the prophesied 'mountain of gold'.",
+      scholarlyCaution: "The Prophet strictly commanded that whoever is present when it happens should not take anything from it, as it will be a major source of Fitnah leading to massive casualties (99 out of 100 will be killed).",
+      sortOrder: 5,
+    },
+    {
+      prophecy: "The land of the Arabs returns to being pastures and rivers",
+      modernInterpretation: "Recent years have seen unusual rainfall and the greening of parts of the Arabian Peninsula. Satellite imagery shows parts of the desert turning green.",
+      scholarlyCaution: "While striking, the full manifestation may require more profound geological and climatic shifts. However, the current phenomena are strong reminders of the prophecy.",
+      sortOrder: 6,
+    },
+    {
+      prophecy: "A man's whip and shoelace speaking to him",
+      modernInterpretation: "Modern technological advancements such as smartwatches, smartphones, and AI devices that people speak to and that speak back to them, often worn on the wrist or carried constantly.",
+      scholarlyCaution: "Many classical scholars interpreted this literally (actual miracles of inanimate objects speaking). Modern interpretations see technology as a possible fulfillment, but Allah knows best.",
+      sortOrder: 7,
+    },
+    {
+      prophecy: "Women who are clothed yet naked",
+      modernInterpretation: "The prevalence of tight-fitting, transparent, or revealing clothing in modern times, where a person is technically wearing fabric but the shape of the body is completely visible.",
+      scholarlyCaution: "This is widely considered by scholars to be fulfilled in modern fashion trends, representing a moral shift in societal modesty.",
+      sortOrder: 8,
+    },
+
   ];
 
   for (const interp of interpretations) {
